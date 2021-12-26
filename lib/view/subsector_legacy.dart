@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sectorworkingcondition/domain/todo.dart';
 import 'package:sectorworkingcondition/database/databasehelper.dart';
 
-class SubSectorController extends StatelessWidget {
+class SubSectorLegacyController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -12,21 +12,21 @@ class SubSectorController extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity
       ),
-      home:SubSectorPage(title:'Listify')
+      home:SubSectorLegacyPage(title:'Listify')
     );
   }
 }
 
-class SubSectorPage extends StatefulWidget {
-  SubSectorPage ({Key key,this.title}) : super(key: key);
+class SubSectorLegacyPage extends StatefulWidget {
+  SubSectorLegacyPage ({Key key,this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _SubSectorPage createState() => _SubSectorPage();
+  _SubSectorLegacyPage createState() => _SubSectorLegacyPage();
 }
 
-class _SubSectorPage extends State<SubSectorPage> {
+class _SubSectorLegacyPage extends State<SubSectorLegacyPage> {
   TextEditingController textController = new TextEditingController();
   List<Todo> taskList = new List();
   final dbHelper = DatabaseHelper.instance;

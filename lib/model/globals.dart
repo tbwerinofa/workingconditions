@@ -16,7 +16,7 @@ class HttpUrl {
   static String subsector = '/api/subsector';
   static String accountForgotPath = '/api/accountmanager/forgotpassword';
   static String userUrl = '/api/accountmanager';
-  static String milestonePath = '/api/milestone/';
+  static String taskgrade = '/api/taskgrade/';
   static String projectPath = '/api/project/';
   static String residentialUnitPath = '/api/residentialunit/';
   static String beneficiaryPath = '/api/beneficiary/';

@@ -1,7 +1,8 @@
 import 'package:path/path.dart';
+import 'package:sectorworkingcondition/database/wageratetable.dart';
 import 'package:sectorworkingcondition/domain/todo.dart';
-import 'package:sectorworkingcondition/model/dashboardItem.dart';
-import 'package:sectorworkingcondition/service/subsector.dart';
+import 'package:sectorworkingcondition/service/dashboarditemservice.dart';
+import 'package:sectorworkingcondition/service/wagerateservice.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 
@@ -64,21 +65,37 @@ Future<void> clearTable()async{
 
   Future<List<Map<String,dynamic>>> getAllSubSectors() async {
 
-  print('getallsubsector');
+    await clearTable();
+    List<int> subSectorIds = new List<int>();
     var resultSet = await queryAllRows();
     print(resultSet.length);
     if(resultSet.length == 0) {
       DashBoardItemService modelSrv = new DashBoardItemService();
       var subsectorList = await modelSrv.fetchEntityList();
 
-      await (subsectorList).map((employee) {
-        Todo entity = new Todo(id:employee.id,title:employee.name);
+      await (subsectorList).map((subsector) {
+        Todo entity = new Todo(id:subsector.id,title:subsector.name);
          insert(entity);
+        subSectorIds.add(subsector.id);
 
       }).toList();
     }
 
     resultSet = await queryAllRows();
+    if(subSectorIds.length >0)
+      {
+        await LoadWageRates(subSectorIds);
+      }
+
     return resultSet;
   }
+
+  void LoadWageRates(List<int> entityList)async
+  {
+    final dbHelper = WageRateTable.instance;
+    await entityList.forEach((element){
+      dbHelper.getWageRateByParentId(element);
+    });
+  }
+
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sectorworkingcondition/view/subsector.dart';
+import 'package:sectorworkingcondition/view/dashboardcontroller.dart';
 
 void main() {
-  runApp(SubSectorController());
+  runApp(DashBoardController());
 }
 
 class MyApp extends StatelessWidget {
