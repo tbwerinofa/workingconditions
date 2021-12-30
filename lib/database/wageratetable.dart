@@ -88,7 +88,7 @@ Future<List<Map<String,dynamic>>> queryAllRows() async{
   print('get database wagerate');
   Database db = await instance.database;
 
-  var res = await db.query(table,orderBy:"$columnId DESC");
+  var res = await db.query(table,orderBy:"$columnId DESC",limit:20);
   return res;
 }
 Future<int> delete(int id) async{

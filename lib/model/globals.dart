@@ -23,10 +23,3 @@ class HttpUrl {
   static String projectDetailPath = '/api/projectdetail/';
 }
 
-class AWSCloudWatch {
-  static String AWSACCESSKEYID = 'AKIA3Y24S7MZJAJ72APZ';
-  static String AWSSECRETACCESSKEY = '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';
-  static String Region = 'eu-west-1'; // (us-west-1, us-east-2, etc)
-  static String LogGroup = 'IPISMobileErrorLogGroup';
-  static String ErrorGroup = 'IPISMobile_DesiredErrorLogGroup';
-}
