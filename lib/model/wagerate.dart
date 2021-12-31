@@ -106,7 +106,7 @@ class WageRateResultSet {
       occupationGroupId: json['occupationGroupId'],
      // finYearId:json['finYearId'],
      // employmentCondition:json['employmentCondition'],
-     // amount:json['amount'],
+      amount:json['amount'],
      // occupationId:json['occupationId'],
      propertyValue:json['propertyValue'],
      // averagePropertyValue:json['averagePropertyValue'],

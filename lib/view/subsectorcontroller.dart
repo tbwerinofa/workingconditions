@@ -201,12 +201,6 @@ class _SubSectorControllerState extends State<SubSectorController> {
                 Expanded(
                     child: charts.TimeSeriesChart(series,
                         animate: true,
-                        // Provide a tickProviderSpec which does NOT require that zero is
-                        // included.
-                        primaryMeasureAxis: new charts.NumericAxisSpec(
-                            tickProviderSpec:
-                            new charts.BasicNumericTickProviderSpec(zeroBound: false))
-
                     ))
               ],
             ),

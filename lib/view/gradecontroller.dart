@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sectorworkingcondition/model/wagerate.dart';
 import 'package:collection/collection.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:sectorworkingcondition/model/coordinates.dart';
+import 'package:intl/intl.dart';
 
 class GradeController extends StatefulWidget {
   GradeController({this.parentEntity,this.parentEntityList});
@@ -14,17 +17,16 @@ class _GradeControllerState extends State<GradeController> {
   _GradeControllerState({this.parentEntity,this.parentEntityList});
   final WageRateResultSet parentEntity;
   final List<WageRateResultSet> parentEntityList;
+  List<Coordinates> _coordinates = new List<Coordinates>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   void initState() {
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-
-    print('before scaffold');
-    print(parentEntity);
     return new Scaffold(
       key:_scaffoldKey,
       appBar: _buildAppBar(),
@@ -36,81 +38,61 @@ class _GradeControllerState extends State<GradeController> {
   Widget _buildAppBar(){
     return AppBar(
 
-        title: Text("Stand No: ${parentEntity.gradingSystem}"));
+        title: Text("Grade : ${parentEntity.ordinal}"));
   }
 
+  void ReadAll()
+  {
+
+    parentEntityList.forEach((element) {
+      _coordinates.add(Coordinates(element.amount,element.finYear));
+    });
+
+
+  }
   SingleChildScrollView  _buildClaimByMilestoneGrid(){
     return SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              // _BuildChart(entityList.dashboardItems),
-              Padding(
-                  padding: EdgeInsets.only(top:10.0
-                  ),
-                  child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                          dataRowHeight: 50,
-                          dividerThickness: 5,
-                          sortColumnIndex: 0,
-                          sortAscending: true,
-                          columns: [
-                            DataColumn(
-                              label: Text(
-                                'Grading System',
-                                style: TextStyle(
-                                  color: Colors.red.shade700,
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                            ),
-                          ],
-                          rows: parentEntityList.take(1)
-                              .map(
-                                (entity) => DataRow(
-                              cells: [
-                                DataCell(
-                                  Container(
-                                    child: Text(
-                                      entity.ordinal.toString() + ": " + entity.grade,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(fontWeight: FontWeight.w600),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ).toList()))),
-              //_buildMilestoneRuleList(),
+              _buildBarChart(),
+              _buildAnnualList(),
              _buildOccupationGroupList(),
-
             ]));
   }
 
-  Widget _buildMilestoneRuleList(){
+  Widget _buildBarChart()
+  {
+    ReadAll();
+    List<charts.Series<Coordinates,String>> series =
+    [
+      charts.Series(
+        id:'Hourly Rate By Year',
+        data: _coordinates,
+        domainFn: (Coordinates series,_)=>series.series.toString(),
+        measureFn:  (Coordinates series,_)=>series.category,
+      )
+    ];
 
-
-    return ListView.builder(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount:parentEntityList.length,
-      itemBuilder: (context,index) {
-
-
-
-        return new ListTile(
-
-            title: new Row(
-              children: <Widget>[
-                new Expanded(child:
-                new Text(parentEntityList[index].ordinal.toString() +'. ' +parentEntityList[index].grade)),
+    return Container(
+        height:400,
+        padding: EdgeInsets.all(20),
+        child:Card(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children:<Widget>[
+                Text('Wage Rate Per year'),
+                Expanded(
+                    child: charts.BarChart(series,
+                        animate: true,
+                    ))
               ],
-            ));
+            ),
+          ),
+        )
 
-      },
     );
   }
 
@@ -256,7 +238,76 @@ class _GradeControllerState extends State<GradeController> {
                           ).toList())))
             ]));
   }
+  SingleChildScrollView  _buildAnnualList(){
+    return SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                  padding: EdgeInsets.only(top:10.0
+                  ),
+                  child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                          dataRowHeight: 40,
+                          dividerThickness: 3,
+                          showCheckboxColumn: false,
+                          columnSpacing: 1.0,
+                          sortColumnIndex: 0,
+                          sortAscending: true,
+                          columns: [
+                            DataColumn(
+                              label: Text(
+                                'Year',
+                                style: TextStyle(
+                                  color: Colors.red.shade700,
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Amount',
+                                style: TextStyle(
+                                  color: Colors.red.shade700,
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ),
 
+                          ],
+                          rows: parentEntityList
+                              .map(
+                                (entity) => DataRow(
+                              cells: [
+                                DataCell(
+                                  Container(
+
+                                    child: Text(
+                                      entity.finYear.toString(),
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  Container(
+
+                                    child: Text(
+                                      'R ' + entity.amount.toStringAsFixed(2),
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ).toList())))
+            ]));
+  }
 
 
 }
