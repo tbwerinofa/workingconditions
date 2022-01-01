@@ -5,6 +5,8 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:sectorworkingcondition/model/coordinates.dart';
 import 'package:intl/intl.dart';
 
+import 'artutil.dart';
+
 class GradeController extends StatefulWidget {
   GradeController({this.parentEntity,this.parentEntityList});
   final WageRateResultSet parentEntity;
@@ -25,15 +27,59 @@ class _GradeControllerState extends State<GradeController> {
     super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) {
+
+    @override
+    Widget build(BuildContext context) {
+      return MaterialApp(
+        title: 'Grade Wage Rate',
+        theme: ThemeData(
+          primarySwatch: Colors.yellow,
+        ),
+        home: DefaultTabController(
+          length: 3,
+          child: Scaffold(
+            key:_scaffoldKey,
+            appBar: AppBar(
+                title: Text("Grade : ${parentEntity.ordinal}",textAlign: TextAlign.center),
+                bottom: TabBar(tabs: <Widget>[
+                  Tab(icon: Icon(Icons.bar_chart), text: ArtUtil.CARAVAGIO),
+                  Tab(icon: Icon(Icons.calendar_today_sharp), text: ArtUtil.MONET),
+                  Tab(icon: Icon(Icons.people), text: ArtUtil.VANGOGH),
+                ])),
+            body: TabBarView(children: <Widget>[
+              Container(
+                  child: _buildBarChart(),
+                  ),
+              Container(
+                  child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            _buildAnnualList(),
+                          ]))),
+              Container(
+                  child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            _buildOccupationGroupList(),
+                          ]))),
+            ]),
+          ),
+        ),
+      );
+    }
+    /*
     return new Scaffold(
       key:_scaffoldKey,
       appBar: _buildAppBar(),
       body: _buildClaimByMilestoneGrid(),
 
     );
-  }
+    */
+
 
   Widget _buildAppBar(){
     return AppBar(
@@ -191,21 +237,13 @@ class _GradeControllerState extends State<GradeController> {
   SingleChildScrollView  _buildOccupationList(List<WageRateResultSet> resultSet){
     return SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                  padding: EdgeInsets.only(top:10.0
-                  ),
-                  child: SingleChildScrollView(
+        child:  SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: DataTable(
                           dataRowHeight: 40,
                           dividerThickness: 3,
-                          showCheckboxColumn: false,
-                          columnSpacing: 1.0,
-                          sortColumnIndex: 0,
-                          sortAscending: true,
+                           sortColumnIndex: 0,
+                          sortAscending: false,
                           columns: [
                             DataColumn(
                               label: Text(
@@ -227,37 +265,30 @@ class _GradeControllerState extends State<GradeController> {
 
                                     child: Text(
                                       entity.occupation,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
+                                            overflow: TextOverflow.ellipsis,
                                       style: TextStyle(fontWeight: FontWeight.w600),
                                     ),
                                   ),
                                 ),
                               ],
                             ),
-                          ).toList())))
-            ]));
+                          ).toList())));
   }
   SingleChildScrollView  _buildAnnualList(){
     return SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                  padding: EdgeInsets.only(top:10.0
-                  ),
-                  child: SingleChildScrollView(
+        child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: DataTable(
                           dataRowHeight: 40,
                           dividerThickness: 3,
                           showCheckboxColumn: false,
-                          columnSpacing: 1.0,
+                          columnSpacing: 10.0,
                           sortColumnIndex: 0,
                           sortAscending: true,
                           columns: [
                             DataColumn(
+
                               label: Text(
                                 'Year',
                                 style: TextStyle(
@@ -280,13 +311,15 @@ class _GradeControllerState extends State<GradeController> {
                           rows: parentEntityList
                               .map(
                                 (entity) => DataRow(
+
                               cells: [
                                 DataCell(
+
                                   Container(
 
                                     child: Text(
                                       entity.finYear.toString(),
-                                      softWrap: true,
+                                      softWrap: false,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(fontWeight: FontWeight.w600),
                                     ),
@@ -305,8 +338,7 @@ class _GradeControllerState extends State<GradeController> {
                                 ),
                               ],
                             ),
-                          ).toList())))
-            ]));
+                          ).toList())));
   }
 
 
