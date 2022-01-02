@@ -113,7 +113,7 @@ class WageRateResultSet {
       //isPrefix:json['isPrefix'],
       measurementUnit:json['measurementUnit'],
       symbol:json['symbol'],
-     // cpiIndex:json['cpiIndex'],
+      cpiIndex:json['cpiIndex'],
 
     );
 

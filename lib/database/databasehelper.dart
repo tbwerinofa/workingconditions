@@ -14,6 +14,26 @@ static final table='todo';
 static final columnId='id';
 static final columnTitle='title';
 
+static final wageratetable='wagerate';
+static final columnGradingSystem= 'gradingSystem';
+static final columnFinYear= 'finYear';
+static final columnGrade= 'grade';
+static final columnOrdinal= 'ordinal';
+static final columnSubSector= 'subSector';
+static final columnOccupation= 'occupation';
+static final columnOccupationGroup= 'occupationGroup';
+static final columnOccupationGroupId= 'occupationGroupId';
+static final columnFinYearId= 'finYearId';
+static final columnEmploymentCondition= 'employmentCondition';
+static final columnAmount= 'amount';
+static final columnOccupationId= 'occupationId';
+static final columnPropertyValue= 'propertyValue';
+static final columnAveragePropertyValue= 'averagePropertyValue';
+static final columnIsPrefix= 'isPrefix';
+static final columnMeasurementUnit= 'measurementUnit';
+static final columnSymbol= 'symbol';
+static final columnCpiIndex= 'cpiIndex';
+
 DatabaseHelper._privateConstructor();
 static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
 
@@ -39,6 +59,30 @@ Future _onCreate(Database db,int version)async{
         CREATE TABLE $table(
         $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
         $columnTitle FLOAT NOT NULL
+        )
+        ''');
+
+  await db.execute('''
+        CREATE TABLE $wageratetable(
+        $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+        $columnGradingSystem TEXT NOT NULL,
+        $columnFinYear  INTEGER NOT NULL,
+        $columnGrade TEXT NOT NULL,
+        $columnOrdinal  INTEGER NULL,
+        $columnSubSector TEXT NOT NULL,
+        $columnOccupation TEXT NULL,
+        $columnOccupationGroup TEXT NULL,
+        $columnOccupationGroupId  INTEGER NULL,
+        $columnFinYearId INTEGER NOT NULL,
+        $columnEmploymentCondition TEXT NOT NULL,
+        $columnAmount REAL NOT NULL,
+        $columnOccupationId  INTEGER NULL,
+        $columnPropertyValue REAL NOT NULL,
+        $columnAveragePropertyValue REAL NULL,
+        $columnIsPrefix INTEGER NOT NULL,
+        $columnMeasurementUnit TEXT NOT NULL,
+        $columnSymbol TEXT NOT NULL,
+        $columnCpiIndex  REAL NOT NULL
         )
         ''');
 }

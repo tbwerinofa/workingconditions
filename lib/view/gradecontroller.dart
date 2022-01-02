@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sectorworkingcondition/model/resultset.dart';
 import 'package:sectorworkingcondition/model/wagerate.dart';
 import 'package:collection/collection.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -9,7 +10,7 @@ import 'artutil.dart';
 
 class GradeController extends StatefulWidget {
   GradeController({this.parentEntity,this.parentEntityList});
-  final WageRateResultSet parentEntity;
+  final int parentEntity;
   final List<WageRateResultSet> parentEntityList;
   @override
   _GradeControllerState createState() => _GradeControllerState(parentEntity:this.parentEntity,parentEntityList:this.parentEntityList);
@@ -17,7 +18,7 @@ class GradeController extends StatefulWidget {
 
 class _GradeControllerState extends State<GradeController> {
   _GradeControllerState({this.parentEntity,this.parentEntityList});
-  final WageRateResultSet parentEntity;
+  final int parentEntity;
   final List<WageRateResultSet> parentEntityList;
   List<Coordinates> _coordinates = new List<Coordinates>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -40,7 +41,7 @@ class _GradeControllerState extends State<GradeController> {
           child: Scaffold(
             key:_scaffoldKey,
             appBar: AppBar(
-                title: Text("Grade : ${parentEntity.ordinal}",textAlign: TextAlign.center),
+                title: Text("Grade : ${parentEntity}",textAlign: TextAlign.center),
                 bottom: TabBar(tabs: <Widget>[
                   Tab(icon: Icon(Icons.bar_chart), text: ArtUtil.CARAVAGIO),
                   Tab(icon: Icon(Icons.calendar_today_sharp), text: ArtUtil.MONET),
@@ -84,7 +85,7 @@ class _GradeControllerState extends State<GradeController> {
   Widget _buildAppBar(){
     return AppBar(
 
-        title: Text("Grade : ${parentEntity.ordinal}"));
+        title: Text("Grade : ${parentEntity}"));
   }
 
   void ReadAll()

@@ -54,29 +54,7 @@ _initDatabase() async{
 
 //SQL Code to create the database table
 Future _onCreate(Database db,int version)async{
-  await db.execute('''
-        CREATE TABLE $table(
-        $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
-        $columnGradingSystem TEXT NOT NULL,
-        $columnFinYear  INTEGER NOT NULL,
-        $columnGrade TEXT NOT NULL,
-        $columnOrdinal  INTEGER NULL,
-        $columnSubSector TEXT NOT NULL,
-        $columnOccupation TEXT NULL,
-        $columnOccupationGroup TEXT NULL,
-        $columnOccupationGroupId  INTEGER NULL,
-        $columnFinYearId INTEGER NOT NULL,
-        $columnEmploymentCondition TEXT NOT NULL,
-        $columnAmount REAL NOT NULL,
-        $columnOccupationId  INTEGER NULL,
-        $columnPropertyValue REAL NOT NULL,
-        $columnAveragePropertyValue REAL NULL,
-        $columnIsPrefix INTEGER NOT NULL,
-        $columnMeasurementUnit TEXT NOT NULL,
-        $columnSymbol TEXT NOT NULL,
-        $columnCpiIndex  INTEGER NOT NULL
-        )
-        ''');
+
 }
 
 Future<int> insert(WageRateResultSet todo) async{
@@ -88,7 +66,7 @@ Future<List<Map<String,dynamic>>> queryAllRows() async{
   print('get database wagerate');
   Database db = await instance.database;
 
-  var res = await db.query(table,orderBy:"$columnId DESC",limit:20);
+  var res = await db.query(table,orderBy: columnOrdinal);
   return res;
 }
 Future<int> delete(int id) async{
@@ -116,12 +94,13 @@ Future<void> clearTable()async{
 
       await (subsectorList).map((employee) {
          insert(employee);
-
       }).toList();
+
+      print('from database');
+      print(resultSet);
+      resultSet = await queryAllRows();
     }
-    print('from database');
-    print(resultSet);
-    resultSet = await queryAllRows();
+
     return resultSet;
   }
 }

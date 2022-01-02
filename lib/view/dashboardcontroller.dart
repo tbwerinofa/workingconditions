@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sectorworkingcondition/domain/todo.dart';
 import 'package:sectorworkingcondition/database/databasehelper.dart';
+import 'package:sectorworkingcondition/model/coordinates.dart';
 import 'package:sectorworkingcondition/view/subsectorcontroller.dart';
 
 class DashBoardController extends StatelessWidget {
@@ -29,7 +30,7 @@ class DashBoardPage extends StatefulWidget {
 
 class _DashBoardPage extends State<DashBoardPage> {
   TextEditingController textController = new TextEditingController();
-  List<Todo> taskList = new List();
+  Set<Todo> taskList = new Set();
   final dbHelper = DatabaseHelper.instance;
   @override
   void initState()
@@ -132,7 +133,7 @@ class _DashBoardPage extends State<DashBoardPage> {
     if(taskList ==null || taskList.length == 0)
     {
       return ListView.builder(
-        itemCount:1,
+        itemCount:taskList.length,
         itemBuilder: (context,index) {
           return Card(
             color: Colors.white,
@@ -165,12 +166,9 @@ class _DashBoardPage extends State<DashBoardPage> {
                // leading: _displayByStyle(),
                 trailing: Icon(Icons.arrow_forward_ios),
                 title: Text(
-                    taskList[index].title),
+                    taskList.elementAt(index).title),
                 onTap: () {
-                  print('navigate');
-
-
-                  navigateToRequest(taskList[index]);
+                  navigateToRequest(taskList.elementAt(index));
                 },
               ),
               //subtitle: Text('Request No: ${entityList[index].requestNo}'),
@@ -193,7 +191,7 @@ class _DashBoardPage extends State<DashBoardPage> {
 
   void ReadAll(List<Map<String,dynamic>> entityList)
   {
-        entityList.forEach((element){
+         entityList.forEach((element){
           taskList.add(Todo(id:element['id'],
               title:element['title']));
     });

@@ -1,8 +1,11 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sectorworkingcondition/database/wageratetable.dart';
 import 'package:sectorworkingcondition/domain/todo.dart';
 import 'package:sectorworkingcondition/model/coordinates.dart';
+import 'package:sectorworkingcondition/model/resultset.dart';
 import 'package:sectorworkingcondition/model/wagerate.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import "package:collection/collection.dart";
@@ -24,6 +27,7 @@ class _SubSectorControllerState extends State<SubSectorController> {
   final Todo parentEntity;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   List<WageRateResultSet> _taskList = new  List<WageRateResultSet>();
+  List<int> _gradeSet = [];
   List<Coordinates> _coordinates = new List<Coordinates>();
   final dbHelper = WageRateTable.instance;
   @override
@@ -127,7 +131,7 @@ class _SubSectorControllerState extends State<SubSectorController> {
 
   Widget _BuildGradeList() {
 
-    if(_taskList ==null || _taskList.length == 0){
+    if(_gradeSet ==null || _gradeSet.length == 0){
       return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
@@ -150,10 +154,15 @@ class _SubSectorControllerState extends State<SubSectorController> {
       );
     }
     else {
-      return ListView.builder(
+      return SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        itemCount: _taskList.length,
+        itemCount: _gradeSet.length,
         itemBuilder: (context, index) {
           return Card(
             //color: _toggleColor(entityList[index].isCompliant),
@@ -163,9 +172,9 @@ class _SubSectorControllerState extends State<SubSectorController> {
                 //  leading: _displayByStyle(entityList[index].isCompliant),
                 trailing: Icon(Icons.arrow_forward_ios),
                 title: Text(
-                    'Grade: ${_taskList[index].ordinal}'),
+                    'Grade: ${_gradeSet[index]}'),
                 onTap: () {
-                  navigateToNext(_taskList[index]);
+                  navigateToNext(_gradeSet[index]);
                 },
 
               ),
@@ -173,7 +182,7 @@ class _SubSectorControllerState extends State<SubSectorController> {
             ),
           );
         },
-      );
+      )]));
     }
   }
   Widget _BuildLineChart()
@@ -234,12 +243,33 @@ class _SubSectorControllerState extends State<SubSectorController> {
 
     _taskList = entityList.map((model)=> WageRateResultSet.fromDatabase(model)).toList();
 
+    Set<int> _localGrades = new Set<int>();
+    _gradeSet =[];
+    _coordinates =[];
+    Set<int> _tempCoordinates = new Set<int>();
     _taskList.forEach((element) {
-      _coordinates.add(Coordinates(element.propertyValue,element.finYear));
+
+      if(!_localGrades.contains(element.ordinal)) {
+        _localGrades.add(element.ordinal);
+        _gradeSet.add(element.ordinal);
+      }
+      if(!_tempCoordinates.contains(element.finYear)) {
+        _tempCoordinates.add(element.finYear);
+        _coordinates.add(
+            Coordinates(element.propertyValue, element.finYear));
+      }
+
     });
 
 
-   }
+
+    _gradeSet.sort();
+
+    _localGrades.forEach((element) {
+     print(element);
+
+    });
+  }
 
   Color _toggleColor(bool isCompliant){
     return Colors.white;
@@ -249,12 +279,14 @@ class _SubSectorControllerState extends State<SubSectorController> {
     return isCompliant ?Icon(Icons.check_circle):Icon(Icons.account_balance);
   }
 
-  void navigateToNext(WageRateResultSet entity) async{
+  void navigateToNext(int entity) async{
+
       await Navigator.push(context,
         MaterialPageRoute(
-            builder: (context) => GradeController(parentEntity: entity,parentEntityList:_taskList.where((element) => element.ordinal == entity.ordinal).toList())),
-      );
-
+            builder: (context)
+                  => GradeController(
+                   parentEntity: entity,
+                      parentEntityList:_taskList.where((element) => element.ordinal == entity).toList())));
 
   }
 
