@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:footer/footer.dart';
+import 'package:footer/footer_view.dart';
 import 'package:sectorworkingcondition/domain/todo.dart';
 import 'package:sectorworkingcondition/database/databasehelper.dart';
 import 'package:sectorworkingcondition/model/coordinates.dart';
+import 'package:sectorworkingcondition/view/occupationcontroller.dart';
 import 'package:sectorworkingcondition/view/subsectorcontroller.dart';
 
 class DashBoardController extends StatelessWidget {
@@ -42,60 +45,17 @@ class _DashBoardPage extends State<DashBoardPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
-          title: new Text('Sub Sector'),
+          title: new Text('Working Condition Dashboard'),
         ),
-        body: GetRequestList()
+        drawer: new Drawer(),
+        body: Column(
+            children: [
+              GetRequestList(),
+             // BuildFooter()
+        ])
     );
   }
 
-  /*
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title:Text(widget.title),
-      ),
-      body:Container(
-        alignment: Alignment.topLeft,
-        padding: EdgeInsets.all(16),
-        child:Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                    child: TextFormField(
-                      decoration:InputDecoration(hintText: "Enter a task"),
-                      controller: textController,
-
-                    )),
-                IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: _addToDb)
-              ],
-            ),
-            SizedBox(height:20),
-            Expanded(
-                child: Container(
-                  child: taskList.isEmpty
-                      ?Container()
-                      :ListView.builder(itemBuilder: (ctx,index){
-                        if(index == taskList.length)return null;
-                        return ListTile(
-                          title: Text(taskList[index].title),
-                          leading: Text(taskList[index].id.toString()),
-                          trailing:IconButton(
-                            icon:Icon(Icons.delete),
-                            onPressed:()=>_deleteTask(taskList[index].id),
-                          )
-                        );
-                  }
-                  )
-                ))
-          ],
-        )
-      )
-    );
-  }
-*/
   Widget GetRequestList() {
 
     return FutureBuilder(
@@ -126,6 +86,95 @@ class _DashBoardPage extends State<DashBoardPage> {
     );
   }
 
+  Widget BuildFooter()
+  {
+    return FooterView(
+        children: <Widget>[
+          new Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              new Padding(
+                padding: EdgeInsets.only(top:50,left: 70),
+                child: new Text('Scrollable View Section'),
+              )
+            ],
+          ),
+        ],
+        footer: new Footer(
+          child: new Padding(
+            padding: EdgeInsets.all(5.0),
+            child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children:<Widget>[
+                  new Center(
+                    child:new Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        new Container(
+                            height: 45.0,
+                            width: 45.0,
+                            child: Center(
+                              child:Card(
+                                elevation: 5.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25.0), // half of height and width of Image
+                                ),
+                                child: IconButton(
+                                  icon: new Icon(Icons.audiotrack,size: 20.0,),
+                                  color: Color(0xFF162A49),
+                                  onPressed: () {},
+                                ),
+                              ),
+                            )
+                        ),
+                        new Container(
+                            height: 45.0,
+                            width: 45.0,
+                            child: Center(
+                              child:Card(
+                                elevation: 5.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25.0), // half of height and width of Image
+                                ),
+                                child: IconButton(
+                                  icon: new Icon(Icons.fingerprint,size: 20.0,),
+                                  color: Color(0xFF162A49),
+                                  onPressed: () {},
+                                ),
+                              ),
+                            )
+                        ),
+                        new Container(
+                            height: 45.0,
+                            width: 45.0,
+                            child: Center(
+                              child:Card(
+                                elevation: 5.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25.0), // half of height and width of Image
+                                ),
+                                child: IconButton(
+                                  icon: new Icon(Icons.call,size: 20.0,),
+                                  color: Color(0xFF162A49),
+                                  onPressed: () {},
+                                ),
+                              ),
+                            )
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Text('Copyright ©2020, All Rights Reserved.',style: TextStyle(fontWeight:FontWeight.w300, fontSize: 12.0, color: Color(0xFF162A49)),),
+                  Text('Powered by Nexsport',style: TextStyle(fontWeight:FontWeight.w300, fontSize: 12.0,color: Color(0xFF162A49)),),
+                ]
+            ),
+          ),
+        )
+    );
+  }
+
   Widget _buildRequestList(List<Map<String,dynamic>> entityList){
 
     ReadAll(entityList);
@@ -138,6 +187,7 @@ class _DashBoardPage extends State<DashBoardPage> {
           return Card(
             color: Colors.white,
             elevation: 2.0,
+            margin: EdgeInsets.fromLTRB(0,2,5,5),
             child: ListTile(
               title: ListTile(
                 title: taskList ==null
@@ -156,39 +206,79 @@ class _DashBoardPage extends State<DashBoardPage> {
     }
     else {
       return ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
         itemCount: entityList.length,
         itemBuilder: (context, index) {
           return Card(
             color: Colors.white,
             elevation: 2.0,
-            child: ListTile(
-              title: ListTile(
-               // leading: _displayByStyle(),
-                trailing: Icon(Icons.arrow_forward_ios),
-                title: Text(
-                    taskList.elementAt(index).title),
-                onTap: () {
-                  navigateToRequest(taskList.elementAt(index));
-                },
-              ),
-              //subtitle: Text('Request No: ${entityList[index].requestNo}'),
-            ),
+            child:  _bodyRowList(taskList.elementAt(index)),
+
           );
         },
       );
     }
   }
 
-  void navigateToRequest(Todo entity) async{
-    print('about to navigate');
-    print(entity.id);
+  Widget _bodyRowList(Todo entity) {
+    return DataTable(
+      columns: [
+        DataColumn(label: Text('')),
+        DataColumn(label: Text(''))
+      ],
+      rows: [
+        DataRow(
+          cells: [
+            DataCell(Text('Sub-Sector')),
+             DataCell(Text(entity.title)),
+          ],
+        ),
+        DataRow(
+          cells: [
+            DataCell(Text('Signatories')),
+            DataCell(Text('BCCEI,SAFEC,NUM,BCAWU')),
+          ],
+        ),
+        DataRow(
+          cells: [
+            DataCell(
+              ElevatedButton(
+                onPressed: () =>
+                {
+                  navigateToOccupation(entity)
+                },
+                child:Text('Occupations'),
+              ),
+            ),
+            DataCell(
+              ElevatedButton(
+                onPressed: () =>
+                {
+                  navigateToWageRate(entity)
+                },
+                child:Text('Wage Rates'),
+              ),
+            ),
 
+          ],
+        ),
+
+      ],
+    );
+  }
+
+  void navigateToWageRate(Todo entity) async{
     await Navigator.push(context,
         MaterialPageRoute(builder: (context) => SubSectorController(parentEntity: entity))
     );
   }
 
-
+  void navigateToOccupation(Todo entity) async{
+    await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => OccupationController(parentEntity: entity))
+    );
+  }
   void ReadAll(List<Map<String,dynamic>> entityList)
   {
          entityList.forEach((element){
