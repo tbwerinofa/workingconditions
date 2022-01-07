@@ -35,7 +35,7 @@ class _GradeControllerState extends State<GradeController> {
       return MaterialApp(
         title: 'Grade Wage Rate',
         theme: ThemeData(
-          primarySwatch: Colors.yellow,
+          primarySwatch: Colors.amber,
         ),
         home: DefaultTabController(
           length: 3,
@@ -74,25 +74,11 @@ class _GradeControllerState extends State<GradeController> {
                             _buildOccupationGroupList(),
                           ]))),
             ]),
+            backgroundColor: Colors.grey,
           ),
         ),
       );
     }
-    /*
-    return new Scaffold(
-      key:_scaffoldKey,
-      appBar: _buildAppBar(),
-      body: _buildClaimByMilestoneGrid(),
-
-    );
-    */
-
-
-  Widget _buildAppBar(){
-    return AppBar(
-
-        title: Text("Grade : ${parentEntity}"));
-  }
 
   void ReadAll()
   {
@@ -102,17 +88,6 @@ class _GradeControllerState extends State<GradeController> {
     });
 
 
-  }
-  SingleChildScrollView  _buildClaimByMilestoneGrid(){
-    return SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _buildBarChart(),
-              _buildAnnualList(),
-             _buildOccupationGroupList(),
-            ]));
   }
 
   Widget _buildBarChart()
@@ -149,11 +124,6 @@ class _GradeControllerState extends State<GradeController> {
 
     );
   }
-
-
-
-
-
   Widget _buildOccupationGroupList() {
     if (parentEntityList == null) {
       return ListView.builder(
@@ -200,7 +170,7 @@ class _GradeControllerState extends State<GradeController> {
                         tabs.add(Tab(
                           child: Text(
                             displayText,
-                            style: TextStyle(color: Colors.blueAccent),
+                            style: TextStyle(color: Colors.white),
                           ),
                         ));
                       }
@@ -227,6 +197,8 @@ class _GradeControllerState extends State<GradeController> {
                                     child: TabBarView(
                                       children:groups.keys.map((dynamicContent) {
                                         return new Card(
+                                            color: Colors.white,
+                                            elevation: 2.0,
                                             child: _buildOccupationList(parentEntityList.where((element) => element.occupationGroup== dynamicContent).toList())
                                         );
                                       }).toList(),
@@ -239,7 +211,6 @@ class _GradeControllerState extends State<GradeController> {
                   )]));
     }
   }
-
   SingleChildScrollView  _buildOccupationList(List<WageRateResultSet> resultSet){
 
     var occupationList = ViewHelper.GenerateOccupationList(resultSet);
@@ -289,7 +260,11 @@ class _GradeControllerState extends State<GradeController> {
         scrollDirection: Axis.vertical,
         child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
-                      child: DataTable(
+                      child:
+        new Card(
+        color: Colors.white,
+        elevation: 2.0,
+        child:DataTable(
                           dataRowHeight: 40,
                           dividerThickness: 3,
                           showCheckboxColumn: false,
@@ -367,7 +342,7 @@ class _GradeControllerState extends State<GradeController> {
                                 ),
                               ],
                             ),
-                          ).toList())));
+                          ).toList()))));
   }
 
 

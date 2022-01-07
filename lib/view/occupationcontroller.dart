@@ -38,6 +38,7 @@ class _OccupationControllerState extends State<OccupationController> {
           title: new Text(parentEntity.title + ' Occupations'),
         ),
         body: GetRequestList(),
+      backgroundColor: Colors.grey,
     );
   }
 
@@ -126,7 +127,7 @@ class _OccupationControllerState extends State<OccupationController> {
                         tabs.add(Tab(
                           child: Text(
                             displayText,
-                            style: TextStyle(color: Colors.blueAccent),
+                            style: TextStyle(color: Colors.white),
                           ),
                         ));
                       }
@@ -155,6 +156,8 @@ class _OccupationControllerState extends State<OccupationController> {
 
                                         var resultset = _taskList.where((element) => element.occupationGroup== dynamicContent).toList();
                                         return new Card(
+                                            color: Colors.white,
+                                            elevation: 2.0,
                                             child:_buildOccupationList(resultset)
                                         );
                                       }).toList(),
@@ -176,7 +179,7 @@ class _OccupationControllerState extends State<OccupationController> {
     child:
     SingleChildScrollView(
         scrollDirection: Axis.vertical,
-            child: DataTable(
+                child:DataTable(
                 dividerThickness: 1,
                 sortColumnIndex: 0,
                 sortAscending: false,

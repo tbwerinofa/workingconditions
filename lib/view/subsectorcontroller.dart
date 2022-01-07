@@ -38,6 +38,7 @@ class _SubSectorControllerState extends State<SubSectorController> {
           title: new Text(parentEntity.title + ' Rates'),
         ),
         body: GetRequestList(),
+      backgroundColor: Colors.grey,
     );
   }
 
@@ -78,51 +79,55 @@ class _SubSectorControllerState extends State<SubSectorController> {
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-             // _BuildChart(entityList.dashboardItems),
-              Padding(
-                  padding: EdgeInsets.only(top:10.0
-                  ),
-                  child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                          dataRowHeight: 50,
-                          dividerThickness: 5,
-                          sortColumnIndex: 0,
-                          sortAscending: true,
-                          columns: [
-                            DataColumn(
-                              label: Text(
-                                'Grading System',
-                                style: TextStyle(
-                                  color: Colors.red.shade700,
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                            ),
-                          ],
-                          rows: _taskList.take(1)
-                              .map(
-                                (entity) => DataRow(
-                              cells: [
-                                DataCell(
-                                  Container(
-                                      child: Text(
-                                      entity.gradingSystem,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(fontWeight: FontWeight.w600),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ).toList()))),
+
+              _BuildSummary(),
               _BuildLineChart(),
               _BuildGradeList(),
 
             ]));
   }
 
+  Widget _BuildSummary()
+  {
+    return Padding(
+        padding: EdgeInsets.only(top:10.0
+        ),
+        child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+                columns: [
+                  DataColumn(label: Text('')),
+                  DataColumn(label: Text('')),
+
+                ],
+                rows: _taskList.take(1)
+                    .map(
+                      (entity) => DataRow(
+                    cells: [
+                      DataCell(
+                        Container(
+                          child: Text(
+                            'Grading System',
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Container(
+                          child: Text(
+                            entity.gradingSystem,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ).toList())));
+  }
   Widget _BuildGradeList() {
 
     if(_gradeSet ==null || _gradeSet.length == 0){
