@@ -32,9 +32,6 @@ class _SubSectorControllerState extends State<SubSectorController> {
   final dbHelper = WageRateTable.instance;
   @override
   Widget build(BuildContext context) {
-
-    print('before scaffold');
-    print(parentEntity);
     return new Scaffold(
       key:_scaffoldKey,
         appBar: new AppBar(
@@ -72,9 +69,6 @@ class _SubSectorControllerState extends State<SubSectorController> {
       future: dbHelper.getWageRateByParentId(parentEntity.id),
     );
   }
-
-
-
 
   SingleChildScrollView  _buildClaimByMilestoneGrid(List<Map<String,dynamic>> entityList){
 
@@ -185,6 +179,7 @@ class _SubSectorControllerState extends State<SubSectorController> {
       )]));
     }
   }
+
   Widget _BuildLineChart()
   {
 
@@ -219,25 +214,6 @@ class _SubSectorControllerState extends State<SubSectorController> {
     );
   }
 
-
-  Text InspectionSubtitle(bool hasInspection)
-  {
-    return hasInspection ? Text(
-
-        'Status:Inspected.',
-        style: TextStyle(
-            fontStyle: FontStyle.italic,
-            color: Colors.green))
-        :
-    Text(
-      'Status:New',
-      style: TextStyle(
-          fontStyle: FontStyle.italic),
-    );
-
-  }
-
-
   void ReadAll(List<Map<String,dynamic>> entityList)
   {
 
@@ -256,7 +232,7 @@ class _SubSectorControllerState extends State<SubSectorController> {
       if(!_tempCoordinates.contains(element.finYear)) {
         _tempCoordinates.add(element.finYear);
         _coordinates.add(
-            Coordinates(element.propertyValue, element.finYear));
+            Coordinates(element.propertyValue, element.finYear,element.cpiIndex));
       }
 
     });
@@ -271,14 +247,6 @@ class _SubSectorControllerState extends State<SubSectorController> {
     });
   }
 
-  Color _toggleColor(bool isCompliant){
-    return Colors.white;
-  }
-
-  Widget _displayByStyle(bool isCompliant){
-    return isCompliant ?Icon(Icons.check_circle):Icon(Icons.account_balance);
-  }
-
   void navigateToNext(int entity) async{
 
       await Navigator.push(context,
@@ -289,13 +257,4 @@ class _SubSectorControllerState extends State<SubSectorController> {
                       parentEntityList:_taskList.where((element) => element.ordinal == entity).toList())));
 
   }
-
-  void showMessage(String message,[MaterialColor color = Colors.red])
-  {
-    _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(
-        backgroundColor: color,
-        content: new Text(message)));
-  }
-
 }

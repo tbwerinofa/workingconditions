@@ -223,6 +223,8 @@ class _DashBoardPage extends State<DashBoardPage> {
 
   Widget _bodyRowList(Todo entity) {
     return DataTable(
+      dividerThickness: 1,
+      columnSpacing: 1,
       columns: [
         DataColumn(label: Text('')),
         DataColumn(label: Text(''))
@@ -237,7 +239,9 @@ class _DashBoardPage extends State<DashBoardPage> {
         DataRow(
           cells: [
             DataCell(Text('Signatories')),
-            DataCell(Text('BCCEI,SAFEC,NUM,BCAWU')),
+            DataCell(Text
+              ('BCCEI,SAFEC,NUM,BCAWU',
+              overflow: TextOverflow.ellipsis,)),
           ],
         ),
         DataRow(

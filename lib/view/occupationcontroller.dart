@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sectorworkingcondition/database/wageratetable.dart';
 import 'package:sectorworkingcondition/domain/todo.dart';
+import 'package:sectorworkingcondition/domain/viewhelper.dart';
 import 'package:sectorworkingcondition/model/coordinates.dart';
 import 'package:sectorworkingcondition/model/occupation.dart';
 import 'package:sectorworkingcondition/model/resultset.dart';
@@ -20,8 +21,6 @@ class OccupationController extends StatefulWidget {
   @override
   _OccupationControllerState createState() => _OccupationControllerState(parentEntity:this.parentEntity);
 }
-
-
 
 class _OccupationControllerState extends State<OccupationController> {
   _OccupationControllerState({this.parentEntity});
@@ -91,7 +90,7 @@ class _OccupationControllerState extends State<OccupationController> {
             child: ListTile(
               title: ListTile(
                 title: Text(
-                    "Session Expired, Click to login"),
+                    "No Data"),
                 onTap: () {
                   // navigateToLogin();
                 },
@@ -122,7 +121,7 @@ class _OccupationControllerState extends State<OccupationController> {
                       List<Tab> tabs = new List<Tab>();
 
                       for(var record in groups.keys) {
-                       var occupationList = GenerateOccupationList(_taskList.where((element) => element.occupationGroup == record).toList());
+                       var occupationList = ViewHelper.GenerateOccupationList(_taskList.where((element) => element.occupationGroup == record).toList());
                         var displayText = record + ' (' + occupationList.length.toString() + ')';
                         tabs.add(Tab(
                           child: Text(
@@ -169,10 +168,8 @@ class _OccupationControllerState extends State<OccupationController> {
     }
   }
 
-
-
   Widget  _buildOccupationList(List<WageRateResultSet> resultSet){
-   var occupationList = GenerateOccupationList(resultSet);
+   var occupationList = ViewHelper.GenerateOccupationList(resultSet);
 
     return Row(
         children: <Widget>[Expanded(
@@ -243,83 +240,9 @@ class _OccupationControllerState extends State<OccupationController> {
                 ).toList())))]);
   }
 
-
-  List<Occupation> GenerateOccupationList(List<WageRateResultSet> entityList)
-  {
-
-    int maxFinYear =0;
-    Set<String> _ids = new Set<String>();
-    List<Occupation> resultList = [];
-    entityList.forEach((element) {
-       if(element.finYear > maxFinYear)
-          maxFinYear = element.finYear;
-    });
-
-    var output = entityList.where((element) => element.finYear == maxFinYear);
-
-    output.toList().forEach((element) {
-      if(!_ids.contains(element.occupation))
-      {
-        _ids.add(element.occupation);
-        resultList.add(Occupation(
-            id:1,
-            title:element.occupation,
-            grade:element.ordinal.toString(),
-            amount:element.amount));
-      }
-
-    });
-
-    resultList.sortBy((element) => element.title);
-
-    return resultList.toList();
-  }
-
   void ReadAll(List<Map<String,dynamic>> entityList)
   {
-
     _taskList = entityList.map((model)=> WageRateResultSet.fromDatabase(model)).toList();
-
-    Set<int> _localGrades = new Set<int>();
-    _gradeSet =[];
-    _coordinates =[];
-    Set<int> _tempCoordinates = new Set<int>();
-    _taskList.forEach((element) {
-
-      if(!_localGrades.contains(element.ordinal)) {
-        _localGrades.add(element.ordinal);
-        _gradeSet.add(element.ordinal);
-      }
-      if(!_tempCoordinates.contains(element.finYear)) {
-        _tempCoordinates.add(element.finYear);
-        _coordinates.add(
-            Coordinates(element.propertyValue, element.finYear));
-      }
-
-    });
-
-
-
-    _gradeSet.sort();
-
-    _localGrades.forEach((element) {
-     print(element);
-
-    });
   }
-
-
-
-  void navigateToNext(int entity) async{
-
-      await Navigator.push(context,
-        MaterialPageRoute(
-            builder: (context)
-                  => GradeController(
-                   parentEntity: entity,
-                      parentEntityList:_taskList.where((element) => element.ordinal == entity).toList())));
-
-  }
-
 
 }
