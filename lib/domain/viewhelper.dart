@@ -1,7 +1,7 @@
 import 'package:collection/src/list_extensions.dart';
-import 'package:sectorworkingcondition/model/occupation.dart';
-import 'package:sectorworkingcondition/model/coordinates.dart';
-import 'package:sectorworkingcondition/model/wagerate.dart';
+import 'package:cbatracker/model/occupation.dart';
+import 'package:cbatracker/model/coordinates.dart';
+import 'package:cbatracker/model/wagerate.dart';
 
  class ViewHelper {
   static List<Occupation> GenerateOccupationList(List<WageRateResultSet> entityList)

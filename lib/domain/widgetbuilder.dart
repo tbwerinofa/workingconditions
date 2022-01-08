@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:footer/footer.dart';
 import 'package:footer/footer_view.dart';
 import 'package:flutter/material.dart';
-class WidgetBuilder{
+class WidgetCustom{
 
-  Widget BuildFooter()
+  static Widget BuildFooter()
   {
     return FooterView(
         children: <Widget>[
@@ -12,7 +12,7 @@ class WidgetBuilder{
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               new Padding(
-                padding: EdgeInsets.only(top:50,left: 70),
+                //padding: EdgeInsets.only(top:50,left: 70),
                 child: new Text('Scrollable View Section'),
               )
             ],

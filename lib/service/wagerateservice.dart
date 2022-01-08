@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 
-import 'package:sectorworkingcondition/model/wagerate.dart';
-import 'package:sectorworkingcondition/model/globals.dart';
+import 'package:cbatracker/model/wagerate.dart';
+import 'package:cbatracker/model/globals.dart';
 
 
 

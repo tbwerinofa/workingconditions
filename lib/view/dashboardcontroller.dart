@@ -1,18 +1,20 @@
+import 'package:cbatracker/domain/widgetbuilder.dart';
+import 'package:cbatracker/view/disclaimercontroller.dart';
+import 'package:cbatracker/view/placeholdercontroller.dart';
 import 'package:flutter/material.dart';
 import 'package:footer/footer.dart';
 import 'package:footer/footer_view.dart';
-import 'package:sectorworkingcondition/domain/todo.dart';
-import 'package:sectorworkingcondition/database/databasehelper.dart';
-import 'package:sectorworkingcondition/model/coordinates.dart';
-import 'package:sectorworkingcondition/view/occupationcontroller.dart';
-import 'package:sectorworkingcondition/view/subsectorcontroller.dart';
+import 'package:cbatracker/domain/todo.dart';
+import 'package:cbatracker/database/databasehelper.dart';
+import 'package:cbatracker/view/occupationcontroller.dart';
+import 'package:cbatracker/view/subsectorcontroller.dart';
 
 class DashBoardController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Working Conditions',
+      title: 'CBA Tracker',
       theme:ThemeData(
         primarySwatch: Colors.amber,
         visualDensity: VisualDensity.adaptivePlatformDensity
@@ -51,11 +53,12 @@ class _DashBoardPage extends State<DashBoardPage> {
         body: Column(
             children: [
               GetRequestList(),
-             // BuildFooter()
-        ]),
+          ]),
+      bottomNavigationBar: _buildBottomNavigationBar(),
       backgroundColor: Colors.grey,
     );
   }
+
 
   Widget GetRequestList() {
 
@@ -95,15 +98,23 @@ class _DashBoardPage extends State<DashBoardPage> {
 
     if(taskList ==null || taskList.length == 0)
     {
-      return ListView.builder(
+      return
+        SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+
+          child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+          Expanded(
+          child:
+            ListView.builder(
         itemCount:taskList.length,
         itemBuilder: (context,index) {
           return Card(
             color: Colors.white,
             elevation: 2.0,
             margin: EdgeInsets.fromLTRB(0,2,5,5),
-            child: ListTile(
-              title: ListTile(
+            child:  ListTile(
                 title: taskList ==null
                     ?Text("Issue Retrieving Subsectors!")
                     :Text("No Subsectors!") ,
@@ -112,14 +123,16 @@ class _DashBoardPage extends State<DashBoardPage> {
                     //navigateToLogin();
                   }
                 },
-              ),
             ),
           );
-        },
+
+        } ))]),
       );
     }
     else {
-      return ListView.builder(
+      return Expanded(
+        child:
+      ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         itemCount: entityList.length,
@@ -131,6 +144,7 @@ class _DashBoardPage extends State<DashBoardPage> {
 
           );
         },
+      ),
       );
     }
   }
@@ -138,7 +152,7 @@ class _DashBoardPage extends State<DashBoardPage> {
   Widget _bodyRowList(Todo entity) {
     return DataTable(
       dividerThickness: 1,
-      columnSpacing: 1,
+      columnSpacing: 2,
       columns: [
         DataColumn(label: Text('')),
         DataColumn(label: Text(''))
@@ -160,15 +174,7 @@ class _DashBoardPage extends State<DashBoardPage> {
         ),
         DataRow(
           cells: [
-            DataCell(
-              ElevatedButton(
-                onPressed: () =>
-                {
-                  navigateToOccupation(entity)
-                },
-                child:Text('Occupations'),
-              ),
-            ),
+
             DataCell(
               ElevatedButton(
                 onPressed: () =>
@@ -178,10 +184,41 @@ class _DashBoardPage extends State<DashBoardPage> {
                 child:Text('Wage Rates'),
               ),
             ),
+            DataCell(
+              ElevatedButton(
+                onPressed: () =>
+                {
+                  navigateToOccupation(entity)
+                },
+                child:Text('Task Grades'),
+              ),
+            ),
+          ],
+        ),
+        DataRow(
+          cells: [
+            DataCell(
+              ElevatedButton(
+                onPressed: () =>
+                {
+                  navigatePlaceHolder('Labour Conditions')
+                },
+                child:Text('Labour Conditions'),
+              ),
+            ),
+            DataCell(
+              ElevatedButton(
+
+                onPressed: () =>
+                {
+                  navigatePlaceHolder('Compliance')
+                },
+                child:Text('Compliance'),
+              ),
+            ),
 
           ],
         ),
-
       ],
     );
   }
@@ -197,6 +234,18 @@ class _DashBoardPage extends State<DashBoardPage> {
         MaterialPageRoute(builder: (context) => OccupationController(parentEntity: entity))
     );
   }
+
+  void navigatePlaceHolder(String target) async{
+    await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => PlaceHolderController(pageTitle:target))
+    );
+  }
+  void navigateDisclaimer() async{
+    await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => DiscliamerController())
+    );
+  }
+
   void ReadAll(List<Map<String,dynamic>> entityList)
   {
          entityList.forEach((element){
@@ -205,92 +254,18 @@ class _DashBoardPage extends State<DashBoardPage> {
     });
   }
 
-  Widget BuildFooter()
-  {
-    return FooterView(
-        children: <Widget>[
-          new Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              new Padding(
-                padding: EdgeInsets.only(top:50,left: 70),
-                child: new Text('Scrollable View Section'),
-              )
-            ],
-          ),
-        ],
-        footer: new Footer(
-          child: new Padding(
-            padding: EdgeInsets.all(5.0),
-            child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children:<Widget>[
-                  new Center(
-                    child:new Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        new Container(
-                            height: 45.0,
-                            width: 45.0,
-                            child: Center(
-                              child:Card(
-                                elevation: 5.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25.0), // half of height and width of Image
-                                ),
-                                child: IconButton(
-                                  icon: new Icon(Icons.audiotrack,size: 20.0,),
-                                  color: Color(0xFF162A49),
-                                  onPressed: () {},
-                                ),
-                              ),
-                            )
-                        ),
-                        new Container(
-                            height: 45.0,
-                            width: 45.0,
-                            child: Center(
-                              child:Card(
-                                elevation: 5.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25.0), // half of height and width of Image
-                                ),
-                                child: IconButton(
-                                  icon: new Icon(Icons.fingerprint,size: 20.0,),
-                                  color: Color(0xFF162A49),
-                                  onPressed: () {},
-                                ),
-                              ),
-                            )
-                        ),
-                        new Container(
-                            height: 45.0,
-                            width: 45.0,
-                            child: Center(
-                              child:Card(
-                                elevation: 5.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25.0), // half of height and width of Image
-                                ),
-                                child: IconButton(
-                                  icon: new Icon(Icons.call,size: 20.0,),
-                                  color: Color(0xFF162A49),
-                                  onPressed: () {},
-                                ),
-                              ),
-                            )
-                        ),
-                      ],
-                    ),
-                  ),
+  Widget _buildBottomNavigationBar(){
+    return BottomAppBar(
 
-                  Text('Copyright ©2020, All Rights Reserved.',style: TextStyle(fontWeight:FontWeight.w300, fontSize: 12.0, color: Color(0xFF162A49)),),
-                  Text('Powered by Nexsport',style: TextStyle(fontWeight:FontWeight.w300, fontSize: 12.0,color: Color(0xFF162A49)),),
-                ]
-            ),
-          ),
-        )
+      child: RaisedButton(
+        color: Colors.blueAccent,
+        textColor: Colors.white,
+        child: Text('Disclaimer'),
+        onPressed: (){
+          navigateDisclaimer();
+        },
+      ),
+
     );
   }
 }

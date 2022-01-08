@@ -1,8 +1,8 @@
+import 'package:cbatracker/view/introcontroller.dart';
 import 'package:flutter/material.dart';
-import 'package:sectorworkingcondition/view/dashboardcontroller.dart';
 
 void main() {
-  runApp(DashBoardController());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.amber,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: IntroController(),
     );
   }
 }

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 
-import 'package:sectorworkingcondition/model/dashboardItem.dart';
-import 'package:sectorworkingcondition/model/globals.dart';
+import 'package:cbatracker/model/dashboardItem.dart';
+import 'package:cbatracker/model/globals.dart';
 
 
 

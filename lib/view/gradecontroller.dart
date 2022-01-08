@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:sectorworkingcondition/domain/viewhelper.dart';
-import 'package:sectorworkingcondition/model/resultset.dart';
-import 'package:sectorworkingcondition/model/wagerate.dart';
+import 'package:cbatracker/domain/viewhelper.dart';
+import 'package:cbatracker/model/resultset.dart';
+import 'package:cbatracker/model/wagerate.dart';
 import 'package:collection/collection.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:sectorworkingcondition/model/coordinates.dart';
+import 'package:cbatracker/model/coordinates.dart';
 import 'package:intl/intl.dart';
 
 import 'artutil.dart';

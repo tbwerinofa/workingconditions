@@ -2,7 +2,7 @@
     package="algotech.co.za.sectorworkingcondition">
    <application
         android:label="sectorworkingcondition"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

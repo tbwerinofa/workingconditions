@@ -1,8 +1,8 @@
 import 'package:path/path.dart';
-import 'package:sectorworkingcondition/domain/todo.dart';
-import 'package:sectorworkingcondition/model/wagerate.dart';
-import 'package:sectorworkingcondition/service/dashboarditemservice.dart';
-import 'package:sectorworkingcondition/service/wagerateservice.dart';
+import 'package:cbatracker/domain/todo.dart';
+import 'package:cbatracker/model/wagerate.dart';
+import 'package:cbatracker/service/dashboarditemservice.dart';
+import 'package:cbatracker/service/wagerateservice.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 
