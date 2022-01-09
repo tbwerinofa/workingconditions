@@ -43,7 +43,7 @@ class _IntroControllerState extends State<IntroController> {
   Widget renderNextBtn(){
   return Icon(
     Icons.navigate_next,
-    color: Colors.amber,
+    color: Colors.black,
       size:35.0
   ) ;
   }
@@ -51,13 +51,13 @@ class _IntroControllerState extends State<IntroController> {
   Widget renderDoneBtn(){
     return Icon(
         Icons.done,
-        color: Colors.amber,
+        color: Colors.black,
     ) ;
   }
   Widget renderSkipBtn(){
     return Icon(
       Icons.skip_next,
-      color: Colors.amber,
+      color: Colors.black,
     ) ;
   }
 List<Widget> renderListCustomTabs(){

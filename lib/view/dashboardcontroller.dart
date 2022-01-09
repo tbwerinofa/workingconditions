@@ -258,7 +258,7 @@ class _DashBoardPage extends State<DashBoardPage> {
     return BottomAppBar(
 
       child: RaisedButton(
-        color: Colors.blueAccent,
+        color: Colors.amber,
         textColor: Colors.white,
         child: Text('Disclaimer'),
         onPressed: (){
