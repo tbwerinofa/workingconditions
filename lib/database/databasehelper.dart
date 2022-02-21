@@ -51,6 +51,8 @@ _initDatabase() async{
   return await openDatabase(path,
   version: _databaseVersion,
   onCreate: _onCreate);
+
+  //fetch data
 }
 
 //SQL Code to create the database table
@@ -107,41 +109,40 @@ Future<void> clearTable()async{
   return await db.rawQuery('DELETE FROM $table');
 }
 
- static SynchroniseDatabase()
-  {
-
-  }
   Future<List<Map<String,dynamic>>> getAllSubSectors() async {
-
-    await clearTable();
+    print('get all subsectors');
     List<int> subSectorIds = new List<int>();
     var resultSet = await queryAllRows();
-    print(resultSet.length);
     if(resultSet.length == 0) {
-      DashBoardItemService modelSrv = new DashBoardItemService();
-      var subsectorList = await modelSrv.fetchEntityList();
-
-      await (subsectorList).map((subsector) {
-        Todo entity = new Todo(id:subsector.id,title:subsector.name);
-         insert(entity);
-        subSectorIds.add(subsector.id);
-
-      }).toList();
+      await loadSubSectors(subSectorIds);
     }
 
     resultSet = await queryAllRows();
     if(subSectorIds.length >0)
       {
-        await LoadWageRates(subSectorIds);
+        await loadWageRates(subSectorIds);
       }
 
     return resultSet;
   }
 
-  void LoadWageRates(List<int> entityList)async
+  Future<void> loadSubSectors(List<int> entityList)async
+  {
+    DashBoardItemService modelSrv = new DashBoardItemService();
+    var subsetList = await modelSrv.fetchEntityList();
+
+    (subsetList).map((record) {
+      Todo entity = new Todo(id:record.id,title:record.name);
+      insert(entity);
+      entityList.add(record.id);
+
+    }).toList();
+  }
+
+  Future<void> loadWageRates(List<int> entityList)async
   {
     final dbHelper = WageRateTable.instance;
-    await entityList.forEach((element){
+     await entityList.forEach((element){
       dbHelper.getWageRateByParentId(element);
     });
   }

@@ -73,8 +73,6 @@ class _DashBoardPage extends State<DashBoardPage> {
             return new Text('');
           case ConnectionState.done:
             if (snapshot.hasError) {
-
-              print('has error');
               return new Text(
                 '${snapshot.error}',
                 style: TextStyle(color: Colors.red),
@@ -98,37 +96,32 @@ class _DashBoardPage extends State<DashBoardPage> {
 
     if(taskList ==null || taskList.length == 0)
     {
-      return
-        SingleChildScrollView(
-          scrollDirection: Axis.vertical,
 
-          child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-          Expanded(
-          child:
-            ListView.builder(
-        itemCount:taskList.length,
-        itemBuilder: (context,index) {
-          return Card(
-            color: Colors.white,
-            elevation: 2.0,
-            margin: EdgeInsets.fromLTRB(0,2,5,5),
-            child:  ListTile(
-                title: taskList ==null
-                    ?Text("Issue Retrieving Subsectors!")
-                    :Text("No Subsectors!") ,
-                onTap: () {
-                  if(taskList ==null) {
-                    //navigateToLogin();
-                  }
+      return Center(
+        child: ElevatedButton(
+          onPressed: () {
+
+
+            final snackBar = SnackBar(
+              elevation: 6.0,
+              backgroundColor: Colors.black,
+              behavior: SnackBarBehavior.floating,
+              content: const Text('Seems there is no internet connection!'),
+              action: SnackBarAction(
+                label: 'Click to Refresh',
+                onPressed: () {
+                  setState(() {});
                 },
-            ),
-          );
+              ),
+            );
 
-        } ))]),
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+          },
+          child: const Text('Check internet connectivity!!'),
+        ),
       );
-    }
+     }
     else {
       return Expanded(
         child:

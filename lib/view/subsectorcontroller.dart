@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:cbatracker/database/wageratetable.dart';
 import 'package:cbatracker/domain/todo.dart';
 import 'package:cbatracker/model/coordinates.dart';
-import 'package:cbatracker/model/resultset.dart';
+import 'package:cbatracker/domain/viewhelper.dart';
 import 'package:cbatracker/model/wagerate.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import "package:collection/collection.dart";
@@ -82,6 +82,7 @@ class _SubSectorControllerState extends State<SubSectorController> {
 
               _BuildSummary(),
               _BuildLineChart(),
+              _buildAnnualList(),
               _BuildGradeList(),
 
             ]));
@@ -90,15 +91,13 @@ class _SubSectorControllerState extends State<SubSectorController> {
   Widget _BuildSummary()
   {
     return Padding(
-        padding: EdgeInsets.only(top:10.0
+        padding: EdgeInsets.only(top:5.0
         ),
         child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
                 columns: [
                   DataColumn(label: Text('')),
-                  DataColumn(label: Text('')),
-
                 ],
                 rows: _taskList.take(1)
                     .map(
@@ -107,17 +106,7 @@ class _SubSectorControllerState extends State<SubSectorController> {
                       DataCell(
                         Container(
                           child: Text(
-                            'Grading System',
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: Colors.white, fontSize: 20.0),
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Container(
-                          child: Text(
-                            entity.gradingSystem,
+                            entity.gradingSystem + ' Grading System',
                             softWrap: true,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(color: Colors.white, fontSize: 20.0),
@@ -200,7 +189,7 @@ class _SubSectorControllerState extends State<SubSectorController> {
 
     return Container(
         height:400,
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(5),
         child:Card(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -209,7 +198,7 @@ class _SubSectorControllerState extends State<SubSectorController> {
                 Text('Wage Rate Per year'),
                 Expanded(
                     child: charts.TimeSeriesChart(series,
-                        animate: true,
+                        animate: true
                     ))
               ],
             ),
@@ -218,6 +207,100 @@ class _SubSectorControllerState extends State<SubSectorController> {
 
     );
   }
+
+
+  SingleChildScrollView  _buildAnnualList(){
+
+
+    return SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child:
+            new Card(
+                color: Colors.white,
+                elevation: 2.0,
+                child:DataTable(
+                    dataRowHeight: 40,
+                    dividerThickness: 1,
+                    showCheckboxColumn: false,
+                    sortColumnIndex: 0,
+                    sortAscending: true,
+                    columns: [
+                      DataColumn(
+
+                        label: Text(
+                          'Year',
+                          style: TextStyle(
+                            color: Colors.red.shade700,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Rate(%)',
+                          style: TextStyle(
+                            color: Colors.red.shade700,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'CPI Index (%)',
+                          style: TextStyle(
+                            color: Colors.red.shade700,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ),
+
+                    ],
+                    rows: _coordinates
+                        .map(
+                          (entity) => DataRow(
+
+                        cells: [
+                          DataCell(
+
+                            Container(
+
+                              child: Text(
+                                entity.series.toString(),
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+                          DataCell(
+                            Container(
+
+                              child: Text(
+                                entity.category.toStringAsFixed(2),
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+                          DataCell(
+                            Container(
+
+                              child: Text(
+                                entity.value.toStringAsFixed(2),
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ).toList()))));
+  }
+
 
   void ReadAll(List<Map<String,dynamic>> entityList)
   {

@@ -333,7 +333,7 @@ class _GradeControllerState extends State<GradeController> {
                                   Container(
 
                                     child: Text(
-                                      'R ' + entity.value.toStringAsFixed(2),
+                                      entity.value.toStringAsFixed(2),
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(fontWeight: FontWeight.w600),

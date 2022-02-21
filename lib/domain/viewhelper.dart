@@ -46,7 +46,7 @@ import 'package:cbatracker/model/wagerate.dart';
       {
         _ids.add(element.finYear);
         resultList.add(
-            Coordinates(element.propertyValue, element.finYear,element.cpiIndex));
+            Coordinates(element.amount, element.finYear,element.cpiIndex));
       }
       });
 

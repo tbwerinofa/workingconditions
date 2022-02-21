@@ -13,7 +13,7 @@ class DashBoardItemService{
 
   Future<List<DashBoardItem>> fetchEntityList() async{
     List<DashBoardItem> resultList = new List<DashBoardItem>();
-
+     print('call service');
     try {
       final result = await InternetAddress.lookup('52.213.36.91');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -34,23 +34,12 @@ class DashBoardItemService{
 
         }
         else {
-          // resp.error = response.reasonPhrase;
-          // return 'error';
+          print(response.reasonPhrase);
+
         }
       }
     } on SocketException catch (_) {
       print('not connected');
-
-      final snackBar = SnackBar(
-        elevation: 6.0,
-        backgroundColor: Colors.black,
-        behavior: SnackBarBehavior.floating,
-        content: Text(
-          "There is not internet connection",
-          style: TextStyle(color: Colors.white),
-        ),
-      );
-
     }
     return resultList;
   }
