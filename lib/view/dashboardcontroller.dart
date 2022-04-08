@@ -14,7 +14,8 @@ class DashBoardController extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'CBA Tracker',
+      debugShowCheckedModeBanner: false,
+      title: 'SWC Tracker',
       theme:ThemeData(
         primarySwatch: Colors.amber,
         visualDensity: VisualDensity.adaptivePlatformDensity

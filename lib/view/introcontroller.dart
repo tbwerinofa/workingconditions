@@ -19,7 +19,7 @@ class _IntroControllerState extends State<IntroController> {
   @override initState() {
 
     slides.add(
-        GenerateSlide("CBA Tracker","Innovative Insight in Action","undraw_under_construction.png")
+        GenerateSlide("SWC Tracker","Innovative Insight in Action","undraw_under_construction.png")
     );
     slides.add(
         GenerateSlide("Wage Rate","Track wage rates by grade","undraw_under_construction.png")
