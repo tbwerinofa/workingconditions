@@ -9,6 +9,8 @@ import 'package:cbatracker/database/databasehelper.dart';
 import 'package:cbatracker/view/occupationcontroller.dart';
 import 'package:cbatracker/view/subsectorcontroller.dart';
 
+import 'myratecontroller.dart';
+
 class DashBoardController extends StatelessWidget {
 
   @override
@@ -191,13 +193,14 @@ class _DashBoardPage extends State<DashBoardPage> {
         ),
         DataRow(
           cells: [
+
             DataCell(
               ElevatedButton(
                 onPressed: () =>
                 {
-                  navigatePlaceHolder('Labour Conditions')
+                  navigatePlaceHolder('MyRate')
                 },
-                child:Text('Labour Conditions'),
+                child:Text('Calculate my Rate'),
               ),
             ),
             DataCell(
@@ -214,6 +217,11 @@ class _DashBoardPage extends State<DashBoardPage> {
           ],
         ),
       ],
+    );
+  }
+  void navigateToMyRate(String target) async{
+    await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => MyRateController(pageTitle:target))
     );
   }
 
