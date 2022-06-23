@@ -110,7 +110,7 @@ Future<void> clearTable()async{
 }
 
   Future<List<Map<String,dynamic>>> getAllSubSectors() async {
-    print('get all subsectors');
+
     List<int> subSectorIds = new List<int>();
     var resultSet = await queryAllRows();
     if(resultSet.length == 0) {

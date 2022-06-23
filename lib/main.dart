@@ -104,6 +104,6 @@ class MyAppState extends State<MyApp> {
         theme: ThemeData(
           primarySwatch: Colors.amber,
         ),
-        home: isLoggedIn ? DashBoardController() : IntroController());
+        home: DashBoardController());
   }
 }

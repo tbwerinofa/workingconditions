@@ -22,7 +22,7 @@ class DashBoardItemService{
           host: Globals.apiHost,
           path: HttpUrl.subsector,
         );
-
+        print(url);
         final response = await http.get(
           url,
           headers: headers,
@@ -39,7 +39,8 @@ class DashBoardItemService{
         }
       }
     } on SocketException catch (_) {
-      print('not connected');
+      print(_.message);
+      print(_.osError);
     }
     return resultList;
   }
