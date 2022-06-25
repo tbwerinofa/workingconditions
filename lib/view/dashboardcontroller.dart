@@ -9,6 +9,8 @@ import 'package:cbatracker/database/databasehelper.dart';
 import 'package:cbatracker/view/occupationcontroller.dart';
 import 'package:cbatracker/view/subsectorcontroller.dart';
 
+import '../database/wageratetable.dart';
+import '../domain/viewhelper.dart';
 import 'myratecontroller.dart';
 
 class DashBoardController extends StatelessWidget {
@@ -198,7 +200,7 @@ class _DashBoardPage extends State<DashBoardPage> {
               ElevatedButton(
                 onPressed: () =>
                 {
-                  navigatePlaceHolder('MyRate')
+                  navigateMyRate(entity)
                 },
                 child:Text('Calculate my Rate'),
               ),
@@ -219,9 +221,9 @@ class _DashBoardPage extends State<DashBoardPage> {
       ],
     );
   }
-  void navigateToMyRate(String target) async{
+  void navigateToMyRate(Todo entity) async{
     await Navigator.push(context,
-        MaterialPageRoute(builder: (context) => MyRateController(pageTitle:target))
+        MaterialPageRoute(builder: (context) => MyRateController(parentEntity:entity))
     );
   }
 
@@ -236,10 +238,16 @@ class _DashBoardPage extends State<DashBoardPage> {
         MaterialPageRoute(builder: (context) => OccupationController(parentEntity: entity))
     );
   }
-
-  void navigatePlaceHolder(String target) async{
+  void navigateMyRate(Todo entity) async{
+    final wageRateHelper = WageRateTable.instance;
+    var dbData =  await wageRateHelper.getWageRateByParentId(entity.id);
     await Navigator.push(context,
-        MaterialPageRoute(builder: (context) => PlaceHolderController(pageTitle:target))
+        MaterialPageRoute(builder: (context) => MyRateController(parentEntity:entity,entityList:dbData))
+    );
+  }
+  void navigatePlaceHolder(String title) async{
+    await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => PlaceHolderController(pageTitle:title))
     );
   }
   void navigateDisclaimer() async{

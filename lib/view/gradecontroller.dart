@@ -165,7 +165,8 @@ class _GradeControllerState extends State<GradeController> {
                       List<Tab> tabs = new List<Tab>();
 
                       for(var record in groups.keys) {
-                        var occupationList = ViewHelper.GenerateOccupationList(parentEntityList.where((element) => element.occupationGroup == record).toList());
+                        var occupationList = ViewHelper.GenerateOccupationList(
+                            parentEntityList.where((element) => element.occupationGroup == record).toList(),null);
                         var displayText = record + ' (' + occupationList.length.toString() + ')';
                         tabs.add(Tab(
                           child: Text(
@@ -213,7 +214,7 @@ class _GradeControllerState extends State<GradeController> {
   }
   SingleChildScrollView  _buildOccupationList(List<WageRateResultSet> resultSet){
 
-    var occupationList = ViewHelper.GenerateOccupationList(resultSet);
+    var occupationList = ViewHelper.GenerateOccupationList(resultSet,null);
     return SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child:  SingleChildScrollView(

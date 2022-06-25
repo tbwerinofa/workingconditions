@@ -62,12 +62,12 @@ class ArtRoute extends StatelessWidget {
         selectedItemColor: Colors.lime[900],
         currentIndex: _currentIndex,
         items: [
-          BottomNavigationBarItem(
-              title: Text(ArtUtil.CARAVAGIO), icon: Icon(Icons.art_track)),
-          BottomNavigationBarItem(
-              title: Text(ArtUtil.MONET), icon: Icon(Icons.art_track)),
-          BottomNavigationBarItem(
-              title: Text(ArtUtil.VANGOGH), icon: Icon(Icons.art_track)),
+          //BottomNavigationBarItem(
+         //     title: Text(ArtUtil.CARAVAGIO), icon: Icon(Icons.art_track)),
+         // BottomNavigationBarItem(
+         //     title: Text(ArtUtil.MONET), icon: Icon(Icons.art_track)),
+         // BottomNavigationBarItem(
+        //      title: Text(ArtUtil.VANGOGH), icon: Icon(Icons.art_track)),
         ],
         onTap: (value) {
           String _artist = ArtUtil.menuItems[value];

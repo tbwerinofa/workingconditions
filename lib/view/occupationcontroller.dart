@@ -122,7 +122,8 @@ class _OccupationControllerState extends State<OccupationController> {
                       List<Tab> tabs = new List<Tab>();
 
                       for(var record in groups.keys) {
-                       var occupationList = ViewHelper.GenerateOccupationList(_taskList.where((element) => element.occupationGroup == record).toList());
+                       var occupationList = ViewHelper.GenerateOccupationList(
+                           _taskList.where((element) => element.occupationGroup == record).toList(),null);
                         var displayText = record + ' (' + occupationList.length.toString() + ')';
                         tabs.add(Tab(
                           child: Text(
@@ -172,7 +173,7 @@ class _OccupationControllerState extends State<OccupationController> {
   }
 
   Widget  _buildOccupationList(List<WageRateResultSet> resultSet){
-   var occupationList = ViewHelper.GenerateOccupationList(resultSet);
+   var occupationList = ViewHelper.GenerateOccupationList(resultSet,null);
 
     return Row(
         children: <Widget>[Expanded(
