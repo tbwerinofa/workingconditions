@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
-
 import '../database/wageratetable.dart';
 import '../domain/todo.dart';
 import '../domain/viewhelper.dart';
-import '../helpers/DecimalTextInputFormatter.dart';
 import '../model/myrategenerate.dart';
 import '../model/wagerate.dart';
 import '../service/myrateservice.dart';
@@ -19,31 +16,27 @@ class MyRateController extends StatefulWidget {
   _MyRateControllerState createState() => _MyRateControllerState(parentEntity:this.parentEntity,entityList:entityList);
 }
 
-
-
 class _MyRateControllerState extends State<MyRateController> {
   _MyRateControllerState({this.parentEntity,this.entityList});
   final Todo parentEntity;
   final List<Map<String,dynamic>> entityList;
   MyRateService repo = MyRateService();
 
-  List<String> _states = ["Choose occupation group"];
-  List<String> _lgas = ["Choose occupation.."];
-  String _selectedState = "Choose occupation group";
+  List<String> _dropDownGroups = ["Choose occupation group.."];
+  List<String> _dropDownChild = ["Choose occupation.."];
+  String _selectedState = "Choose occupation group..";
   String _selectedLGA = "Choose occupation..";
   bool _isInAsyncCall = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
   List<WageRateResultSet> _taskList = new  List<WageRateResultSet>();
-  List<int> _gradeSet = [];
+
   final dbHelper = WageRateTable.instance;
-  MyRateGenerate newEntity = new MyRateGenerate('',0,0,'','',0,0,0,0,0);
+  MyRateGenerate newEntity = new MyRateGenerate(null,0,0,null,null,0,0,0,0,0);
   @override
   void initState() {
     newEntity.sector =parentEntity.title;
-
-    _states.addAll(ViewHelper.GenerateOccupationGroupList(entityList));
-
+    _dropDownGroups.addAll(ViewHelper.GenerateOccupationGroupList(entityList));
     super.initState();
   }
   @override
@@ -52,13 +45,15 @@ class _MyRateControllerState extends State<MyRateController> {
       key:_scaffoldKey,
       appBar: new AppBar(
         title: new Text('Sector: '+parentEntity.title),
-        leading: Icon(Icons.filter_vintage),
+        leading: Icon(Icons.apartment),
       ),
-      body:_buildBody(context)
+      body: Column(
+          children: [
 
-
+            _buildBody(context)
+    ]),
     //bottomNavigationBar: _buildBottomNavigationBarItem(),
-    );
+     );
   }
 
 
@@ -70,6 +65,7 @@ class _MyRateControllerState extends State<MyRateController> {
           scrollDirection: Axis.vertical,
           child: ListView.builder(
             scrollDirection: Axis.vertical,
+            padding: EdgeInsets.all(10),
             shrinkWrap: true,
             itemCount: 1,
             itemBuilder: (context, index) {
@@ -90,19 +86,13 @@ class _MyRateControllerState extends State<MyRateController> {
           ));
     }
     else {
-
       _taskList.sortBy((element) =>  element.occupationGroup);
       final groups = groupBy(_taskList, (WageRateResultSet e) {
         return e.occupationGroup;
       });
-
       return  _buildBody(context);
-
-
     }
   }
-
-
 
   void  FetchOccupationList(List<Map<String,dynamic>> entityList){
 
@@ -114,7 +104,7 @@ class _MyRateControllerState extends State<MyRateController> {
       });
 
       groups.entries.forEach((element) {
-        _states.add(element.key);
+        _dropDownGroups.add(element.key);
       });
 
     }
@@ -142,7 +132,7 @@ class _MyRateControllerState extends State<MyRateController> {
             //styling
             DropdownButton<String>(
               isExpanded: true,
-              items: _states.map((String dropDownStringItem) {
+              items: _dropDownGroups.map((String dropDownStringItem) {
                 return DropdownMenuItem<String>(
                   value: dropDownStringItem,
                   child: Text(dropDownStringItem),
@@ -153,7 +143,7 @@ class _MyRateControllerState extends State<MyRateController> {
             ),
             DropdownButton<String>(
               isExpanded: true,
-              items: _lgas.map((String dropDownStringItem) {
+              items: _dropDownChild.map((String dropDownStringItem) {
                 return DropdownMenuItem<String>(
                   value: dropDownStringItem,
                   child: Text(dropDownStringItem),
@@ -188,11 +178,14 @@ class _MyRateControllerState extends State<MyRateController> {
             TextFormField(
                 decoration: InputDecoration(labelText: 'What is your rate in (Rands) per hour?'),
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
-                inputFormatters:[DecimalTextInputFormatter(decimalRange: 2)],
+                inputFormatters:[
+                  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))
+                  //DecimalTextInputFormatter(decimalRange: 2)
+                ],
                 onFieldSubmitted: (value) {
                   //Validator
                 },
-                onSaved: (val)=> newEntity.currentRate =num.tryParse(val),
+                onSaved: (val)=> newEntity.currentRate =double.tryParse(val.toString()),
                 validator: rateValidator
             ),
             Padding(
@@ -238,20 +231,23 @@ class _MyRateControllerState extends State<MyRateController> {
 
   void _submit() {
     bool isValid = true;
+
     if (newEntity.occupationGroup == null) {
+
       showMessage("select occupation group",Colors.red);
       isValid = false;
     }
 
     if (newEntity.occupation == null) {
-      showMessage("select occupation",Colors.red);
+      showMessage("Choose occupation..",Colors.red);
       isValid = false;
     }
 
-    if (newEntity.currentRate < num.tryParse('1') || newEntity.currentRate > num.tryParse('500')) {
+    if (newEntity.currentRate *1.0 < double.tryParse('1.0') || newEntity.currentRate > num.tryParse('500.0')) {
       showMessage("must be between 1 and 500",Colors.red);
       isValid = false;
     }
+
     if (newEntity.dayCount < 1 || newEntity.dayCount > 7) {
       showMessage("must be between 1 and 7",Colors.red);
       isValid = false;
@@ -278,10 +274,7 @@ class _MyRateControllerState extends State<MyRateController> {
         Future.delayed(Duration(seconds: 1), () {
           //save to rest
           setState(() {
-
             _navNext(context, newEntity);
-
-
             _isInAsyncCall = false;
           });
         });
@@ -350,25 +343,23 @@ class _MyRateControllerState extends State<MyRateController> {
       }
     return null;
   }
-
   void _onSelectedState(String value) {
     setState(() {
       _selectedLGA = "Choose ..";
-      _lgas = ["Choose .."];
+      _dropDownChild = ["Choose .."];
       _selectedState = value;
 
-      var record = _states.firstWhere((element) => element == value);
+      var record = _dropDownGroups.firstWhere((element) => element == value);
 
-      _lgas.addAll(ViewHelper.GetOccupationList(entityList,record));
+      _dropDownChild.addAll(ViewHelper.GetOccupationList(entityList,record));
 
       newEntity.occupationGroup = record;
 
     });
   }
-
   void _onSelectedLGA(String value) {
     setState(() => _selectedLGA = value);
-    var record = _lgas.firstWhere((element)=>element == value);
+    var record = _dropDownChild.firstWhere((element)=>element == value);
     var occupation = ViewHelper.GetOccupation(entityList,record);
     newEntity.occupation = record;
     newEntity.finYear =occupation.finYear;
