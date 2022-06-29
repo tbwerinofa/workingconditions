@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cbatracker/domain/viewhelper.dart';
-import 'package:cbatracker/model/resultset.dart';
-import 'package:cbatracker/model/wagerate.dart';
-import 'package:collection/collection.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:cbatracker/model/coordinates.dart';
-import 'package:intl/intl.dart';
-
 import '../model/myrategenerate.dart';
-import 'artutil.dart';
+import 'controllerhelper.dart';
 
 class MyRateResultController extends StatefulWidget {
   MyRateResultController({this.parentEntity});
@@ -24,28 +17,39 @@ class _MyRateResultControllerState extends State<MyRateResultController> {
 
   List<Coordinates> _coordinates = new List<Coordinates>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  bool isNegative = false;
   @override
   void initState() {
-
+   isNegative = parentEntity.currentRate > parentEntity.amount;
     super.initState();
   }
 
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return new MaterialApp(
+        title: 'My Calculated Rate',
+        theme: ThemeData(
+          primarySwatch: Colors.amber,
+        ),
+        home:Scaffold(
       key:_scaffoldKey,
       appBar: new AppBar(
-        title: new Text('My Rate: '+ parentEntity.occupation),
-        leading: Icon(Icons.filter_vintage),
+        title: new Text('My Calculated Rate'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body:Column(
           children: [
             _buildMyRateSummary(),
             _buildMyRateDetail()
 
-          ])
-    );
+          ]),
+          bottomNavigationBar: ControllerHelper.buildBottomNavigationBar(context),
+          backgroundColor: Colors.grey,
+    ));
   }
   Widget _buildMyRateSummary(){
 
@@ -73,12 +77,18 @@ class _MyRateResultControllerState extends State<MyRateResultController> {
       ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        itemCount: 1,
+        itemCount: 3,
         itemBuilder: (context, index) {
           return Card(
             color: Colors.white,
             elevation: 2.0,
-            child:  _BuildMyRate(),
+
+            child:
+            Column(
+                children: [
+                  _BuildMyRateTile(index),
+                  _BuildMyRate(index)
+                ]),
 
           );
         },
@@ -128,23 +138,71 @@ class _MyRateResultControllerState extends State<MyRateResultController> {
           cells: [
 
             DataCell(Text('')),
-            DataCell(Text( parentEntity.amount> parentEntity.currentRate
-                ?'You earn below agreed rate'
-                :'Your rate is compliant')),
+            DataCell(TextStyleFormat( parentEntity.amount> parentEntity.currentRate
+                ?'You earn below agreed wage rate'
+                :'Your wage rate is compliant')),
           ],
         ),
       ],
     );
   }
 
-  Widget  _BuildMyRate(){
+  Widget  _BuildMyRateTile(index){
+    if(index == 0)
+    {
+      return RowStyleFormat('Wage per Hour','R ' + parentEntity.currentRate.toStringAsFixed(2) +'/per hour');
+    }
+    else if(index == 1)
+    {
+      return RowStyleFormat('Wage per day',parentEntity.hourCount.toString() +' hour day');
+    }
+    else
+    {
+      return RowStyleFormat('Wage per week',parentEntity.hourCount.toString() +' day week');
 
-    return Row(
-        children: <Widget>[Expanded(
-            child:
-            SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child:DataTable(
+    }
+  }
+  Widget  _BuildMyRate(index){
+    if(index == 0)
+      {
+
+        return _buildRateGriRate('R '+ parentEntity.currentRate.toStringAsFixed(2)
+                                  ,'R '+ parentEntity.amount.toStringAsFixed(2)
+                                  , 'R '+  (parentEntity.currentRate - parentEntity.amount).toStringAsFixed(2));
+       }
+    else if(index == 1)
+    {
+   return  _buildRateGriRate('R '+ (parentEntity.hourCount *  parentEntity.currentRate).toStringAsFixed(2)
+    ,'R '+ (parentEntity.hourCount *  parentEntity.amount).toStringAsFixed(2)
+    ,'R '+ (parentEntity.hourCount *  parentEntity.currentRate
+    -parentEntity.hourCount *  parentEntity.amount).toStringAsFixed(2));
+    }
+    else
+    {
+      return  _buildRateGriRate('R '+ (parentEntity.hourCount *parentEntity.dayCount *  parentEntity.currentRate).toStringAsFixed(2)
+          ,'R '+ (parentEntity.hourCount * parentEntity.dayCount *  parentEntity.amount).toStringAsFixed(2)
+          ,'R '+ (parentEntity.hourCount  * parentEntity.dayCount *  parentEntity.currentRate
+              -parentEntity.hourCount  * parentEntity.dayCount *  parentEntity.amount).toStringAsFixed(2));
+    }
+  }
+
+ Widget TextStyleFormat(value)
+ {
+   var _isNegative = parentEntity.currentRate < parentEntity.amount;
+   return Text(value,
+       style: TextStyle(
+         color:_isNegative? Colors.red.shade700: Colors.green.shade700,
+         fontSize: 16.0,
+       ));
+ }
+
+  Widget  _buildRateGriRate(value,expected,variance){
+       return  Row(
+          children: <Widget>[Expanded(
+              child:
+              SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child:DataTable(
                     dividerThickness: 1,
                     sortColumnIndex: 0,
                     sortAscending: false,
@@ -152,7 +210,7 @@ class _MyRateResultControllerState extends State<MyRateResultController> {
                     columns: [
                       DataColumn(
                         label:Text(
-                            'Rate',
+                            '',
                             style: TextStyle(
                               color: Colors.red.shade700,
                               fontSize: 16.0,
@@ -160,7 +218,7 @@ class _MyRateResultControllerState extends State<MyRateResultController> {
                       ),
                       DataColumn(
                         label: Text(
-                          'Value',
+                          '',
                           style: TextStyle(
                             color: Colors.red.shade700,
                             fontSize: 16.0,
@@ -168,35 +226,6 @@ class _MyRateResultControllerState extends State<MyRateResultController> {
                         ),
 
                       ),
-                      DataColumn(
-                        label: Text(
-                          'Total',
-                          style: TextStyle(
-                            color: Colors.red.shade700,
-                            fontSize: 16.0,
-                          ),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Expected',
-                          style: TextStyle(
-                            color: Colors.red.shade700,
-                            fontSize: 16.0,
-                          ),
-                        ),
-                      ),
-
-                      DataColumn(
-                        label: Text(
-                          'Variance',
-                          style: TextStyle(
-                            color: Colors.red.shade700,
-                            fontSize: 16.0,
-                          ),
-                        ),
-                      ),
-
                     ],
                     rows: [
                       DataRow(
@@ -205,31 +234,16 @@ class _MyRateResultControllerState extends State<MyRateResultController> {
                               Container(
                                 child:
                                 Text(
-                                  'Hourly',
+                                  'My Rate',
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               )),
                           DataCell(
                             Text(
-                              parentEntity.currentRate.toStringAsFixed(2),
+                             value
                             ),
                           ),
-                          DataCell(
-                            Text(
-                              'R '+  parentEntity.currentRate.toStringAsFixed(2),
-                            ),
-                          ),
-                          DataCell(
-                            Text(
-                              'R '+  parentEntity.amount.toStringAsFixed(2),
-                            ),
-                          ),
-                          DataCell(
-                            Text(
-                              'R '+  (parentEntity.currentRate - parentEntity.amount).toStringAsFixed(2),
-                            ),
-                          )
                         ],
                       ),
                       DataRow(
@@ -238,32 +252,16 @@ class _MyRateResultControllerState extends State<MyRateResultController> {
                               Container(
                                 child:
                                 Text(
-                                  'Daily',
+                                  'Expected',
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               )),
                           DataCell(
                             Text(
-                              parentEntity.hourCount.toString(),
+                             expected
                             ),
                           ),
-                          DataCell(
-                            Text(
-                              'R '+ (parentEntity.hourCount *  parentEntity.currentRate).toStringAsFixed(2),
-                            ),
-                          ),
-                          DataCell(
-                            Text(
-                              'R '+ (parentEntity.hourCount *  parentEntity.amount).toStringAsFixed(2),
-                            ),
-                          ),
-                          DataCell(
-                            Text(
-                              'R '+ (parentEntity.hourCount *  parentEntity.currentRate
-                                  -parentEntity.hourCount *  parentEntity.amount).toStringAsFixed(2),
-                            ),
-                          )
                         ],
                       ),
                       DataRow(
@@ -272,38 +270,46 @@ class _MyRateResultControllerState extends State<MyRateResultController> {
                               Container(
                                 child:
                                 Text(
-                                  'Weekly',
+                                  'Variance',
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               )),
                           DataCell(
-                            Text(
-                              parentEntity.dayCount.toString(),
+                            TextStyleFormat(
+                              variance
                             ),
                           ),
-                          DataCell(
-                            Text(
-                              'R '+   (parentEntity.hourCount * parentEntity.dayCount *  parentEntity.currentRate).toStringAsFixed(2),
-                            ),
-                          ),
-                          DataCell(
-                            Text(
-                              'R '+ (parentEntity.hourCount * parentEntity.dayCount *  parentEntity.amount).toStringAsFixed(2),
-                            ),
-                          ),
-                          DataCell(
-                            Text(
-                              'R '+ (parentEntity.hourCount * parentEntity.dayCount *  parentEntity.currentRate
-                                      -parentEntity.hourCount * parentEntity.dayCount *  parentEntity.amount).toStringAsFixed(2),
-                            ),
-                          )
                         ],
                       ),
-                  ],
-                    )))]);
+                    ],
+                  )))]);
+
   }
 
 
+ Widget RowStyleFormat(header,subtitle)
+ {
+   return Row(
+       children: <Widget>[Expanded(
+           child:
+           SingleChildScrollView(
+               scrollDirection: Axis.vertical,
+               child:ListTile(
+                   leading: const Icon(Icons.add),
+                   title: Text(
+                     header,
+                     textScaleFactor: 1.5,
+                   ),
+                   trailing: const Icon(Icons.done),
+                   subtitle: TextStyleFormat(subtitle),
+                   selected: true,
+                   onTap: () {
+                     setState(() {
 
+                     });
+                   }
+               )
+           ))]);
+ }
 }

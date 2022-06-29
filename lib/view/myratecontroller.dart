@@ -6,6 +6,7 @@ import '../domain/viewhelper.dart';
 import '../model/myrategenerate.dart';
 import '../model/wagerate.dart';
 import '../service/myrateservice.dart';
+import 'controllerhelper.dart';
 import 'myrateresultcontroller.dart';
 import "package:collection/collection.dart";
 class MyRateController extends StatefulWidget {
@@ -41,89 +42,44 @@ class _MyRateControllerState extends State<MyRateController> {
   }
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      key:_scaffoldKey,
-      appBar: new AppBar(
-        title: new Text('Sector: '+parentEntity.title),
-        leading: Icon(Icons.apartment),
-      ),
-      body: Column(
-          children: [
+    return new MaterialApp(
+        title: 'My Calculated Rate',
+        theme: ThemeData(
+          primarySwatch: Colors.amber,
+        ),
+        home: Scaffold(
+          key: _scaffoldKey,
+          appBar: new AppBar(
+            title: new Text('Sector: '+parentEntity.title),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+          body: SingleChildScrollView(
+    child: Column(
+              children: [
+                _buildBody(context)
 
-            _buildBody(context)
-    ]),
-    //bottomNavigationBar: _buildBottomNavigationBarItem(),
-     );
-  }
-
-
-  SingleChildScrollView  _buildClaimByMilestoneGrid(List<Map<String,dynamic>> entityList,BuildContext context){
-
-    ReadAll(entityList);
-    if (_taskList == null) {
-      return SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: ListView.builder(
-            scrollDirection: Axis.vertical,
-            padding: EdgeInsets.all(10),
-            shrinkWrap: true,
-            itemCount: 1,
-            itemBuilder: (context, index) {
-              return Card(
-                color: Colors.white,
-                elevation: 2.0,
-                child: ListTile(
-                  title: ListTile(
-                    title: Text(
-                        "No Data"),
-                    onTap: () {
-                      // navigateToLogin();
-                    },
-                  ),
-                ),
-              );
-            },
-          ));
-    }
-    else {
-      _taskList.sortBy((element) =>  element.occupationGroup);
-      final groups = groupBy(_taskList, (WageRateResultSet e) {
-        return e.occupationGroup;
-      });
-      return  _buildBody(context);
-    }
-  }
-
-  void  FetchOccupationList(List<Map<String,dynamic>> entityList){
-
-    ReadAll(entityList);
-    if (_taskList != null) {
-      _taskList.sortBy((element) =>  element.occupationGroup);
-      final groups = groupBy(_taskList, (WageRateResultSet e) {
-        return e.occupationGroup;
-      });
-
-      groups.entries.forEach((element) {
-        _dropDownGroups.add(element.key);
-      });
-
-    }
-  }
-
-  void ReadAll(List<Map<String,dynamic>> entityList)
-  {
-    _taskList = entityList.map((model)=> WageRateResultSet.fromDatabase(model)).toList();
+              ])),
+          bottomNavigationBar: ControllerHelper.buildBottomNavigationBar(
+              context),
+          backgroundColor: Colors.grey,
+        ));
   }
 
   SingleChildScrollView _buildBody(BuildContext context)
   {
-
-
     return  SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Form(
         key: _loginFormKey,
-        child: Column(
+        child: Card(
+        color: Colors.white,
+        elevation: 2.0,
+
+        child:
+        Column(
           children: <Widget>[
             Text(
               "Calculate My Rate ",
@@ -149,22 +105,10 @@ class _MyRateControllerState extends State<MyRateController> {
                   child: Text(dropDownStringItem),
                 );
               }).toList(),
-              // onChanged: (value) => print(value),
               onChanged: (value) => _onSelectedLGA(value),
               value: _selectedLGA,
             ),
             //styling
-            TextFormField(
-              decoration: InputDecoration(labelText: 'How many days a week do you work?'),
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              onFieldSubmitted: (value) {
-                //Validator
-              },
-              onSaved: (val)=> newEntity.dayCount =int.tryParse(val),
-              validator: weekValidator
-            ),
-
             TextFormField(
                 decoration: InputDecoration(labelText: 'How many hours a day you work?'),
                 keyboardType: TextInputType.number,
@@ -174,6 +118,16 @@ class _MyRateControllerState extends State<MyRateController> {
                 },
                 onSaved: (val)=> newEntity.hourCount =int.tryParse(val),
                 validator: hourValidator
+            ),
+            TextFormField(
+                decoration: InputDecoration(labelText: 'How many days a week do you work?'),
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                onFieldSubmitted: (value) {
+                  //Validator
+                },
+                onSaved: (val)=> newEntity.dayCount =int.tryParse(val),
+                validator: weekValidator
             ),
             TextFormField(
                 decoration: InputDecoration(labelText: 'What is your rate in (Rands) per hour?'),
@@ -224,10 +178,33 @@ class _MyRateControllerState extends State<MyRateController> {
                 )
             ),
           ],
-        ),
+        ),)
       ),
     );
   }
+
+  void  FetchOccupationList(List<Map<String,dynamic>> entityList){
+
+    ReadAll(entityList);
+    if (_taskList != null) {
+      _taskList.sortBy((element) =>  element.occupationGroup);
+      final groups = groupBy(_taskList, (WageRateResultSet e) {
+        return e.occupationGroup;
+      });
+
+      groups.entries.forEach((element) {
+        _dropDownGroups.add(element.key);
+      });
+
+    }
+  }
+
+  void ReadAll(List<Map<String,dynamic>> entityList)
+  {
+    _taskList = entityList.map((model)=> WageRateResultSet.fromDatabase(model)).toList();
+  }
+
+
 
   void _submit() {
     bool isValid = true;

@@ -31,24 +31,24 @@ class _DiscliamerControllerState extends State<DiscliamerController> {
     ));
   }
   final htmlData = r"""
-    <h1>CBA Tracker Disclaimer</h1>
+    <h1>SWC Tracker Disclaimer</h1>
       <hr/>
        <p style="text-align: justify;">
        <h2>INTRODUCTION</h2>
-       The information provided by CBA Tracker (“we,” “us” or “our”) on this mobile application
+       The information provided by SWC Tracker (“we,” “us” or “our”) on this mobile application
        is for general informational purposes only. All information on the mobile application is provided in good faith,
        however we make no representation or warranty of any kind, express or implied, regarding the accuracy, adequacy,
        validity, reliability, availability or completeness of any information on our mobile application.
        </p>
        <p style="text-align: justify;">
        Under no circumstance shall we have any liability to you for any loss or damage of any kind incurred
-       as a result of the use of the CBA Tracker or reliance on any information provided on 
+       as a result of the use of the SWC Tracker or reliance on any information provided on 
        our mobile application. Your use of the our mobile application and your reliance on any information
        on our mobile application is solely at your own risk. 
        </p>
       <p style="text-align: justify;">
         <h2>EXTERNAL LINKS DISCLAIMER FOR WEBSITE</h2>
-         CBA Tracker may contain (or you may be sent through our mobile application)
+         SWC Tracker may contain (or you may be sent through our mobile application)
          links to other websites or content belonging to or originating from third parties
          or links to websites and features in banners or other advertising. 
          Such external links are not investigated, monitored, or checked for accuracy, adequacy,
@@ -68,7 +68,7 @@ class _DiscliamerControllerState extends State<DiscliamerController> {
        <a href='https://bccei.co.za'>Bargaining Council for the Civil Engineering Industry (BCCEI)</a> 
       </li>
       </ol>
-        Please note CBA Tracker is not affliated in anyway to the data providers, 
+        Please note SWC Tracker is not affliated in anyway to the data providers, 
        and any problems arising from relying on the data 
        the they will not be held liable
          </p>
