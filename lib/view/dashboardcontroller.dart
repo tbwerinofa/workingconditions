@@ -54,7 +54,7 @@ class _DashBoardPage extends State<DashBoardPage> {
         appBar: new AppBar(
           title: new Text('Working Condition Dashboard'),
         ),
-        drawer: new Drawer(),
+        //drawer: new Drawer(),
         body: Column(
             children: [
               GetRequestList(),
@@ -205,16 +205,7 @@ class _DashBoardPage extends State<DashBoardPage> {
                 child:Text('Calculate my Rate'),
               ),
             ),
-            DataCell(
-              ElevatedButton(
-
-                onPressed: () =>
-                {
-                  navigatePlaceHolder('Compliance')
-                },
-                child:Text('Compliance'),
-              ),
-            ),
+            DataCell(SizedBox.shrink()),
 
           ],
         ),
@@ -267,13 +258,18 @@ class _DashBoardPage extends State<DashBoardPage> {
   Widget _buildBottomNavigationBar(){
     return BottomAppBar(
 
-      child: RaisedButton(
-        color: Colors.amber,
-        textColor: Colors.white,
-        child: Text('Disclaimer'),
+      child: ElevatedButton(
         onPressed: (){
           navigateDisclaimer();
         },
+        child: Text('Disclaimer'),
+        style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.amber,
+            padding:
+            const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+            textStyle:
+            const TextStyle(color:Colors.white,fontSize: 20, fontWeight: FontWeight.bold)),
+
       ),
 
     );

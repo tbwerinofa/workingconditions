@@ -148,7 +148,7 @@ class _MyRateControllerState extends State<MyRateController> {
                 Row(children: <Widget>[
 
                   Expanded(
-                    child: RaisedButton(
+                    child: ElevatedButton(
                       onPressed: () {
                         if (_loginFormKey.currentState.validate()) {
                           _loginFormKey.currentState.save();
@@ -156,22 +156,31 @@ class _MyRateControllerState extends State<MyRateController> {
                         }
                       },
                       child: Text('Generate'),
-                      color: Colors.blue,
-                      textColor: Colors.white,
-                      splashColor: Colors.grey,
+                      //color: Colors.blue,
+                     // textColor: Colors.white,
+                      //splashColor: Colors.grey,
+                 style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                  textStyle:
+                  const TextStyle(backgroundColor: Colors.blue,color:Colors.blue,fontSize: 30, fontWeight: FontWeight.bold)),
                     ),
                   ),
                   Expanded(
-                    child:RaisedButton(
+                    child:ElevatedButton(
                       onPressed: () {
                         setState(() {
                           _loginFormKey.currentState.reset();
                         });
                       },
                       child: Text('Refresh'),
-                      color: Colors.white,
-                      textColor: Colors.black,
-                      splashColor: Colors.grey,
+                      style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          padding:
+                          const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                          textStyle:
+                          const TextStyle(backgroundColor: Colors.black,color:Colors.white,fontSize: 30, fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],

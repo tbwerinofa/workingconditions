@@ -2,7 +2,7 @@
 class Globals {
   static String token; //oauth token
   static String scheme = 'http';
-  static String apiHost = '52.213.36.91';
+  static String apiHost = '18.200.168.124';
 
   static String authorization = 'Bearer ' + Globals.token;
 
@@ -14,6 +14,7 @@ class Globals {
 
 class HttpUrl {
   static String subsector = '/api/subsector';
+  static String dashboard = '/api/dashboard';
   static String accountForgotPath = '/api/accountmanager/forgotpassword';
   static String userUrl = '/api/accountmanager';
   static String taskgrade = '/api/taskgrade/';

@@ -15,12 +15,12 @@ class DashBoardItemService{
     List<DashBoardItem> resultList = new List<DashBoardItem>();
      print('call service');
     try {
-      final result = await InternetAddress.lookup('52.213.36.91');
+      final result = await InternetAddress.lookup('18.200.168.124');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
 
         var url = new Uri(scheme: Globals.scheme,
           host: Globals.apiHost,
-          path: HttpUrl.subsector,
+          path: HttpUrl.dashboard,
         );
         print(url);
         final response = await http.get(
@@ -28,6 +28,7 @@ class DashBoardItemService{
           headers: headers,
         );
 
+        print(response.statusCode);
         if (response.statusCode == 200) {
           Iterable json = convert.jsonDecode(response.body);
           resultList = json.map((model)=> DashBoardItem.fromObject(model)).toList();

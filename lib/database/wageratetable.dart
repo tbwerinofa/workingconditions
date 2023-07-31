@@ -83,7 +83,7 @@ Future<void> clearTable()async{
 
 
     var resultSet = await queryAllRows();
-    print(resultSet.length);
+
     if(resultSet.length == 0) {
       WageRateService modelSrv = new WageRateService();
       var subsectorList = await modelSrv.fetchEntityList(parentId);
