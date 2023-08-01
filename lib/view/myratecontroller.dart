@@ -160,13 +160,11 @@ class _MyRateControllerState extends State<MyRateController> {
                      // textColor: Colors.white,
                       //splashColor: Colors.grey,
                  style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                  textStyle:
-                  const TextStyle(backgroundColor: Colors.blue,color:Colors.blue,fontSize: 30, fontWeight: FontWeight.bold)),
+                  foregroundColor: Colors.black,
+                 ),
                     ),
                   ),
+                  SizedBox(width: 20),
                   Expanded(
                     child:ElevatedButton(
                       onPressed: () {
@@ -176,11 +174,8 @@ class _MyRateControllerState extends State<MyRateController> {
                       },
                       child: Text('Refresh'),
                       style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          padding:
-                          const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                          textStyle:
-                          const TextStyle(backgroundColor: Colors.black,color:Colors.white,fontSize: 30, fontWeight: FontWeight.bold)),
+                          backgroundColor: Colors.grey,
+                          foregroundColor: Colors.white)
                     ),
                   ),
                 ],
